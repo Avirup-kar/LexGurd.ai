@@ -1,0 +1,52 @@
+import { Outlet } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { ArrowRight, Menu, Shield, X } from 'lucide-react';
+import Sidebar from '@/components/Sidebar';
+// import { SignIn, useUser } from '@clerk/clerk-react';
+
+const Layout = () => {
+  const Navigate = useNavigate();
+  const [sidebar, setSidebar] = useState(false);
+//   const {user} = useUser();
+
+  return (
+    <div className='flex flex-col items-start justify-start h-screen absolute top-0 left-0 right-0 bottom-0'>
+      <nav className='w-full px-3 md:px-8 min-h-14 flex items-center justify-between border-b border-gray-700'>
+        <a href="/" className="flex items-center gap-2">
+            <div className="relative">
+              <Shield className="h-10 w-10 text-primary" />
+              <div className="absolute inset-0 blur-md bg-primary/20" />
+            </div>
+            <span className="text-[20px] md:text-[25px] font-semibold tracking-tight">
+              <span className="text-foreground">Clause</span>
+              <span className="gradient-text-blue">Guard</span>
+            </span>
+          </a>
+
+          <div className='flex justify-center items-center gap-4'>
+            {
+              sidebar ? <X className='w-6 h-6 text-gray-600 sm:hidden' onClick={()=>setSidebar(false)}/>
+               : <Menu className='w-6 h-6 text-gray-600 sm:hidden' onClick={()=>setSidebar(true)}/>
+            }
+
+            <div className="items-center gap-3 py-4">
+              <button className="text-sm px-4 py-2 rounded-lg btn-blue text-foreground font-medium glow-blue-sm transition-all flex items-center gap-1.5">
+                Try Free <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+      </nav>
+
+      <div className='flex-1 w-full flex h-[calc(100vh-64px)]'>
+        <Sidebar sidebar={sidebar} setSidebar={setSidebar}/>
+        <div className='flex-1 bg-[#0d0d0d]'>
+           <Outlet />
+        </div>
+      </div> 
+    </div>
+  ) 
+  
+}
+
+export default Layout
