@@ -11,15 +11,15 @@ const Layout = () => {
 //   const {user} = useUser();
 
   return (
-    <div className='flex flex-col items-start justify-start h-screen absolute top-0 left-0 right-0 bottom-0'>
+    <div className='flex flex-col items-start justify-start h-screen fixed top-0 left-0 right-0 bottom-0'>
       <nav className='w-full px-3 md:px-8 min-h-14 flex items-center justify-between border-b border-gray-700'>
         <a href="/" className="flex items-center gap-2">
             <div className="relative">
-              <Shield className="h-10 w-10 text-primary" />
+              <Shield className="h-10 md:h-12 w-10 md:w-12 text-primary" />
               <div className="absolute inset-0 blur-md bg-primary/20" />
             </div>
-            <span className="text-[20px] md:text-[25px] font-semibold tracking-tight">
-              <span className="text-foreground">Clause</span>
+            <span className="text-[25px] md:text-[30px] font-semibold tracking-tight">
+              <span className="text-foreground">Lex</span>
               <span className="gradient-text-blue">Guard</span>
             </span>
           </a>
