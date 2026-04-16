@@ -25,12 +25,22 @@ export default function ContractAnalysis({ contract }) {
 
   return (
    <div className="text-white flex flex-col lg:flex-row min-h-screen">
-     <div className=" pt-10 pb-5 lg:h-screen lg:sticky lg:top-0 flex pl-0 lg:pl-8 justify-center items-center overflow-hidden">
+     <div className=" pt-10 pb-5 lg:h-screen lg:sticky lg:top-0 flex flex-col pl-0 lg:pl-8 justify-center items-center overflow-hidden">
+           <div>
+             <h3 className="font-semibold text-gray-400 text-sm lg:text-[20px] w-[250px] my-4 text-center">
+               {contract.contractTitle}
+             </h3>
+           </div>
            <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4yM9O0KyzXOTB3D6MWrJ8IVOG-OQgQma-zw&s"
               alt="Contract Preview"
               className=" w-[170px] md:w-[200px] lg:w-[250px] h-[240px] md:h-[300px] lg:h-[350px] object-cover rounded-lg shadow-lg border border-white/10"
            />
+           <div>
+                <p className="text-[15px] my-4 text-gray-300 w-[250px] text-center leading-relaxed">
+                  {contract.overallSummary}
+                </p>
+              </div>
       </div>
 
      <div className="flex-1 lg:overflow-y-auto p-4 md:p-8">
