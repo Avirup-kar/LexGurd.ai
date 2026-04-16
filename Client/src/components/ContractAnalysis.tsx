@@ -32,8 +32,8 @@ export default function ContractAnalysis({ contract }) {
         <SummaryCard
           title="OVERALL RISK"
           value={overallRisk}
-          color="text-red-500"
-          bg="bg-[#2b0d0f]"
+          color= {contract.overallRisk === "high" ? "text-red-500" : contract.overallRisk === "medium"? "text-yellow-500" : "text-green-400"}
+          bg={contract.overallRisk === "high" ? "bg-[#2b0d0f]" : contract.overallRisk === "medium"? "bg-yellow-500/20" : "bg-green-500/10"}
         />
 
         <SummaryCard
