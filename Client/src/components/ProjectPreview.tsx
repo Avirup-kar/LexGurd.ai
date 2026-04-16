@@ -4,7 +4,7 @@ import ContractAnalysis from "./ContractAnalysis";
 function ProjectPreview() {
 
   return <>
-  <div className="overflow-y-auto h-screen space-y-20 pt-5 pb-20">
+  <div className="h-screen space-y-20  pb-10">
     <ContractAnalysis contract={contractData} />
   </div>
   </>
