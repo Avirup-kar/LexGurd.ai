@@ -9,6 +9,7 @@ export default function UploadContract() {
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const inputRef = useRef(null)
+  const [dragging, setDragging] = useState(false)
 
   const handleFile = (e) => {
 
@@ -22,6 +23,8 @@ export default function UploadContract() {
       setPreview(url)
     } else {
       setPreview(null)
+      setFile(null)
+      alert('Only image accepeted')
     }
 
   }
@@ -39,9 +42,37 @@ export default function UploadContract() {
     inputRef.current?.click()
   }
 
+
+const handleDragOver = (e) => {
+  e.preventDefault()
+  setDragging(true)
+}
+
+const handleDragLeave = () => {
+  setDragging(false)
+}
+
+const handleDrop = (e) => {
+  e.preventDefault()
+  setDragging(false)
+
+  const droppedFile = e.dataTransfer.files[0]
+  if (!droppedFile) return
+
+  setFile(droppedFile)
+
+  if (droppedFile.type.startsWith("image/")) {
+    setPreview(URL.createObjectURL(droppedFile))
+  }
+  else{
+    setFile(null)
+    alert('Only image accepeted')
+  }
+}
+
   return (
 
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6">
 
       <div className="w-full max-w-xl">
 
@@ -59,10 +90,17 @@ export default function UploadContract() {
 
         {/* Upload Box */}
         <motion.div
-          whileHover={{ scale: 1.02 }}
-          onClick={openFile}
-          className="relative cursor-pointer border-2 border-dashed border-blue-500/30 rounded-xl p-10 bg-[#020817] hover:border-blue-500 transition"
-        >
+  whileHover={{ scale: 1.02 }}
+  onClick={openFile}
+  onDragOver={handleDragOver}
+  onDragLeave={handleDragLeave}
+  onDrop={handleDrop}
+  className={`relative cursor-pointer border-2 border-dashed rounded-xl p-10 transition
+  ${dragging
+    ? "border-blue-500"
+    : "border-blue-500/30"
+  }`}
+>
 
           <input
             ref={inputRef}
