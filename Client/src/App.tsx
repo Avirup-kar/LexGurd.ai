@@ -9,6 +9,7 @@ import Layout from "./pages/Layout.tsx";
 import History from "./pages/History.tsx";
 import Dashboard from "./components/Dashboard.tsx";
 import Settings from "./components/Settings.tsx";
+import ProjectPreview from "./components/ProjectPreview.tsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <BrowserRouter>
           <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/project/:projectId" element={<ProjectPreview />} />
           <Route path='/dashboard' element={<Layout />}>
              <Route index element={<Dashboard/>} />
              <Route path='history' element={<History/>} />
