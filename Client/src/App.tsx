@@ -11,6 +11,8 @@ import Dashboard from "./components/Dashboard.tsx";
 import Settings from "./components/Settings.tsx";
 import ProjectPreview from "./components/ProjectPreview.tsx";
 import { ClerkProvider } from '@clerk/react'
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Login from "./components/Login.tsx";
 
 const queryClient = new QueryClient();
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -24,8 +26,16 @@ const App = () => (
       <BrowserRouter>
           <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/project/:projectId" element={<ProjectPreview />} />
-          <Route path='/dashboard' element={<Layout />}>
+          <Route
+           path="/dashboard"
+           element={
+             <ProtectedRoute>
+               <Layout />
+             </ProtectedRoute>
+           }
+          >
              <Route index element={<Dashboard/>} />
              <Route path='history' element={<History/>} />
              <Route path='settings' element={<Settings/>} />

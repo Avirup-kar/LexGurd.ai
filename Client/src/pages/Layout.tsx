@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import { ArrowRight, Menu, Shield, X } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import { Show, useClerk, UserButton, } from "@clerk/react";
 // import { SignIn, useUser } from '@clerk/clerk-react';
 
 const Layout = () => {
@@ -30,11 +31,10 @@ const Layout = () => {
                : <Menu className='w-6 h-6 text-gray-600 sm:hidden' onClick={()=>setSidebar(true)}/>
             }
 
-            <div className="items-center gap-3 py-4">
-              <button className="text-sm px-4 py-2 rounded-lg btn-blue text-foreground font-medium glow-blue-sm transition-all flex items-center gap-1.5">
-                Try Free <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
+
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
           </div>
       </nav>
 
