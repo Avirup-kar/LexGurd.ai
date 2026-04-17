@@ -33,11 +33,11 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2">
             <div className="relative">
-              <Shield className="h-6 w-6 text-primary" />
+              <Shield className="h-10 w-10 text-primary" />
               <div className="absolute inset-0 blur-md bg-primary/20" />
             </div>
-            <span className="text-base font-semibold tracking-tight">
-              <span className="text-foreground">Clause</span>
+            <span className="text-xl font-semibold tracking-tight">
+              <span className="text-foreground">Lex</span>
               <span className="gradient-text-blue">Guard</span>
             </span>
           </a>

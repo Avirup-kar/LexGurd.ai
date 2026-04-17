@@ -1,5 +1,5 @@
 // import { useClerk, useUser, Protect } from '@clerk/clerk-react';
-import { ChevronUp, Eraser, FileText, Hash, History, House, Image, LayoutDashboardIcon, LogOut, Scissors, Settings, SquarePen, Users } from 'lucide-react';
+import { ChevronUp, Eraser, FileText, Hash, History, House, icons, Image, LayoutDashboardIcon, LogOut, Scissors, Settings, SquarePen, Users } from 'lucide-react';
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
        <div className='text-sm text-gray-600 font-medium mx-3 mt-3'> 
         {navItems.map(({to, label, Icon}) => (
             <NavLink
+                key={to}
                 to={to}
                 end={to === '/dashboard'}
                 onClick={() => setSidebar(false)}
