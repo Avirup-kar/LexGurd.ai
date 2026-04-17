@@ -1,12 +1,12 @@
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import SocialProofBar from "@/components/SocialProofBar";
-import HowItWorks from "@/components/HowItWorks";
-import ProductShowcase from "@/components/ProductShowcase";
-import RiskTypes from "@/components/RiskTypes";
-import Testimonials from "@/components/Testimonials";
-import CTABanner from "@/components/CTABanner";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/HeropageCom/Navbar";
+import HeroSection from "@/components/HeropageCom/HeroSection";
+import SocialProofBar from "@/components/HeropageCom/SocialProofBar";
+import HowItWorks from "@/components/HeropageCom/HowItWorks";
+import ProductShowcase from "@/components/HeropageCom/ProductShowcase";
+import RiskTypes from "@/components/HeropageCom/RiskTypes";
+import Testimonials from "@/components/HeropageCom/Testimonials";
+import CTABanner from "@/components/HeropageCom/CTABanner";
+import Footer from "@/components/HeropageCom/Footer";
 
 const Index = () => (
   <div className="min-h-screen bg-background">

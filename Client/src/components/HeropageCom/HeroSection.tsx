@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Play } from "lucide-react";
 import ContractCard from "./ContractCard";
+import { useNavigate } from "react-router-dom";
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } };
 const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } } };
 
-const HeroSection = () => (
+const HeroSection = () => {
+  const navigate = useNavigate();
+  
+  return (
   <section id="hero" className="relative min-h-screen pt-32 pb-24 overflow-hidden">
     <div className="absolute inset-0 bg-dot-pattern" />
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px]" style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)" }} />
@@ -32,7 +36,7 @@ const HeroSection = () => (
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-3 mb-8">
-            <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg btn-blue text-foreground font-medium glow-blue-sm transition-all text-sm">
+            <button onClick={() => navigate("/dashboard")} className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg btn-blue text-foreground font-medium glow-blue-sm transition-all text-sm">
               Analyze My Contract Free <ArrowRight className="h-4 w-4" />
             </button>
             <button className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg border border-subtle text-foreground hover:bg-secondary transition-colors text-sm">
@@ -55,6 +59,6 @@ const HeroSection = () => (
       </div>
     </div>
   </section>
-);
+)};
 
 export default HeroSection;

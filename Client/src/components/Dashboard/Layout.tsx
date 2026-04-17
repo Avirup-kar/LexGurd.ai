@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import { ArrowRight, Menu, Shield, X } from 'lucide-react';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/Dashboard/Sidebar';
 import { Show, useClerk, UserButton, } from "@clerk/react";
 // import { SignIn, useUser } from '@clerk/clerk-react';
 
@@ -30,7 +30,7 @@ const Layout = () => {
               sidebar ? <X className='w-6 h-6 text-gray-600 sm:hidden' onClick={()=>setSidebar(false)}/>
                : <Menu className='w-6 h-6 text-gray-600 sm:hidden' onClick={()=>setSidebar(true)}/>
             }
-
+  
 
             <Show when="signed-in">
               <UserButton />

@@ -5,14 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import Layout from "./pages/Layout.tsx";
+import Layout from "./components/Dashboard/Layout.tsx";
 import History from "./pages/History.tsx";
-import Dashboard from "./components/Dashboard.tsx";
-import Settings from "./components/Settings.tsx";
-import ProjectPreview from "./components/ProjectPreview.tsx";
+import Dashboard from "./components/Dashboard/Dashboard.tsx";
+import Settings from "./components/Dashboard/Settings.tsx";
+import ProjectPreview from "./components/Dashboard/ProjectPreview.tsx";
 import { ClerkProvider } from '@clerk/react'
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import Login from "./components/Login.tsx";
+import ProtectedRoute from "./components/Dashboard/ProtectedRoute.tsx";
+import Login from "./components/HeropageCom/Login.tsx";
 
 const queryClient = new QueryClient();
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY

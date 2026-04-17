@@ -1,10 +1,13 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CTABanner = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const navigate = useNavigate();
+
 
   return (
     <section className="py-28 border-t border-subtle relative overflow-hidden">
@@ -24,7 +27,7 @@ const CTABanner = () => {
         <p className="text-secondary-custom text-lg mb-10 max-w-xl mx-auto">
           Or you could know exactly what you're signing. Try ClauseGuard free — no credit card required.
         </p>
-        <button className="inline-flex items-center gap-2 px-8 py-4 rounded-lg btn-blue text-foreground font-medium glow-blue text-base transition-all">
+        <button onClick={() => navigate("/dashboard")} className="inline-flex items-center gap-2 px-8 py-4 rounded-lg btn-blue text-foreground font-medium glow-blue text-base transition-all">
           Analyze My First Contract Free <ArrowRight className="h-5 w-5" />
         </button>
         <p className="text-xs text-secondary-custom mt-6">Join 10,000+ people who sign with confidence</p>
