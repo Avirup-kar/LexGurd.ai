@@ -10,11 +10,14 @@ import History from "./pages/History.tsx";
 import Dashboard from "./components/Dashboard.tsx";
 import Settings from "./components/Settings.tsx";
 import ProjectPreview from "./components/ProjectPreview.tsx";
+import { ClerkProvider } from '@clerk/react'
 
 const queryClient = new QueryClient();
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -31,6 +34,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </ClerkProvider>
   </QueryClientProvider>
 );
 
