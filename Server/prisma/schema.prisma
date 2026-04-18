@@ -14,7 +14,7 @@ datasource db {
 
 
 model Project {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   userId       String                        // from Clerk
   imageUrl     String?                       // from Cloudinary
   contractData Json                          // from Gemini
