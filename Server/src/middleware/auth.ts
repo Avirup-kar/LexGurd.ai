@@ -15,8 +15,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
           return res.json({ success: false, message: "User not found." });
         }
 
-        req.userId = userId
-
         next();
     } catch (error: any) {
         return res.status(500).json({
