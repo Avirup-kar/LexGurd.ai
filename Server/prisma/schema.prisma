@@ -17,9 +17,8 @@ model Project {
   id           String   @id @default(uuid())
   userId       String                        // from Clerk
   imageUrl     String?                       // from Cloudinary
-  contractData Json                          // from Gemini
-  overallRisk  String                        // "low" | "medium" | "high"
-  email        Json                          // 👈 will store { subject, body }
+  contractData Json?                          // from Gemini
+  email        Json?                          // 👈 will store { subject, body }
   credits      Int      @default(3)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
