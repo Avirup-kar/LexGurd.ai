@@ -34,7 +34,30 @@ export async function getProjectHistory(req: Request, res: Response){
 
 export async function getProject(req: Request, res: Response) {
   try {
-      
+      const { projectId } = req.params;
+      const { userId } = getAuth(req);
+
+      if(!projectId && !userId) {
+        return res.status(404).json({
+         success: false,
+         message: "projectId & userId needed"
+        });
+      }
+
+      const project = await prisma.project.findFirst({
+        where: {
+          id: projectId as string,
+          userId: userId as string
+        }
+      })
+
+       if (!project) {
+         return res.status(404).json({
+           message: "Project not found or access denied"
+         });
+       }
+
+       res.status(200).json({ success: true,  project });
   } catch (error: any) {
       return res.status(500).json({
          success: false,
