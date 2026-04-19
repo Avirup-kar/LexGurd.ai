@@ -48,6 +48,11 @@ export async function getProject(req: Request, res: Response) {
         where: {
           id: projectId as string,
           userId: userId as string
+        },
+        select: {
+          id: true,
+          contractData: true,
+          email: true
         }
       })
 

@@ -19,6 +19,7 @@ model Project {
   imageUrl     String?                       // from Cloudinary
   contractData Json                          // from Gemini
   overallRisk  String                        // "low" | "medium" | "high"
+  email        Json                          // 👈 will store { subject, body }
   credits      Int      @default(3)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
