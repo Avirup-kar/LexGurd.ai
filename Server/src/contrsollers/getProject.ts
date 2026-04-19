@@ -31,3 +31,14 @@ export async function getProjectHistory(req: Request, res: Response){
          });
     }   
 }
+
+export async function getProject(req: Request, res: Response) {
+  try {
+      
+  } catch (error: any) {
+      return res.status(500).json({
+         success: false,
+         message: error.message || "Internal server error"
+      });
+  }
+}

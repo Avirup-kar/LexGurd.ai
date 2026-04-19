@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec npx tsx src/index.ts",
-    "start": "tsx src/index.ts",
+    "start": "tsx src/index.js",
     "build": "tsc"
   },
   "dependencies": {
