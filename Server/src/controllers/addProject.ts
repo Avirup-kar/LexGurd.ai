@@ -34,7 +34,9 @@ export async function addproject(req: Request, res: Response) {
           }
         })
 
-        
+        res.json({ message: "success", projectId: createProject.id });
+
+        //get data from the gemini
 
     }catch (error: any) {
       return res.status(500).json({
