@@ -56,11 +56,11 @@ export async function getProject(req: Request, res: Response) {
         }
       })
 
-       if (!project) {
-         return res.status(404).json({
+      if (!project) {
+        return res.status(404).json({
            message: "Project not found or access denied"
-         });
-       }
+        });
+      }
 
        res.status(200).json({ success: true,  project });
   } catch (error: any) {
