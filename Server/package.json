@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@clerk/express": "^2.1.5",
+    "@google/genai": "^1.50.1",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "cloudinary": "^2.9.0",

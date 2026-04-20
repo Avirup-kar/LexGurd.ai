@@ -146,7 +146,6 @@ export default function ContractAnalysis({ contract }) {
           </h2>
 
           {selectedClause && (
-
             <>
               <h3 className="text-lg md:text-xl font-semibold mb-2">
                 {selectedClause.title}

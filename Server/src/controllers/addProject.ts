@@ -2,6 +2,7 @@ import { getAuth } from "@clerk/express";
 import type { Request, Response } from "express";
 import { v2 as cloudinary } from 'cloudinary'
 import prisma from "../lib/prisma.js";
+import { analyzeContractImage, type ContractAnalysis } from "../lib/analyzeContract.js";
 
 
 
@@ -36,7 +37,19 @@ export async function addproject(req: Request, res: Response) {
 
         res.json({ message: "success", projectId: createProject.id });
 
+        //conver image to base64 for gemini access
+        const base64ForGemini = image.buffer.toString("base64");
+        const mimeType = image.mimetype;
+        
         //get data from the gemini
+        const contractData = await analyzeContractImage(base64ForGemini, mimeType);
+
+        const project = await prisma.project.update({
+          where: {id: createProject.id},
+          data : {
+            contractData: JSON.parse(JSON.stringify(contractData)),
+          }
+        })
 
     }catch (error: any) {
       return res.status(500).json({
