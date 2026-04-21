@@ -18,7 +18,6 @@ export async function getProjectHistory(req: Request, res: Response){
               createdAt: "desc" // 🔥 latest first
             },
             select: {
-              imageUrl: true,
               id: true,
               contractData: true
             }
@@ -58,6 +57,7 @@ export async function getProject(req: Request, res: Response) {
         },
         select: {
           id: true,
+          imageUrl: true,
           contractData: true,
           email: true
         }
