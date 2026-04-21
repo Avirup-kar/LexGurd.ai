@@ -12,12 +12,12 @@ interface Clause {
   solution: string | null;
 }
 
-export interface ContractAnalysis {
+interface ContractAnalysis {
   contractTitle: string;
   overallRisk: "low" | "medium" | "high";
   overallSummary: string;
   clauses: Clause[];
-  missingClauses: string[];
+  missingClauses: string[] | null;
 }
 
 const parseGeminiResponse = (rawText: string): ContractAnalysis => {
@@ -54,7 +54,7 @@ Just raw JSON in this exact structure:
       "solution": "string or null"
     }
   ],
-  "missingClauses": ["string", "string"]
+  "missingClauses": ["string", "string"] | null
 }
 
 Rules:
@@ -62,6 +62,7 @@ Rules:
 - solution must be null if riskLevel is "safe"
 - originalText must be the exact clause text from the contract
 - plainEnglish must be in simple language a non-lawyer understands and in easy english word
+- if no missingClauses just add null
 - Extract all text from the image first, then analyze it
 `;
 

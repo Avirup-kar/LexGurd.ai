@@ -2,7 +2,7 @@ import { getAuth } from "@clerk/express";
 import type { Request, Response } from "express";
 import { v2 as cloudinary } from 'cloudinary'
 import prisma from "../lib/prisma.js";
-import { analyzeContractImage, type ContractAnalysis } from "../lib/analyzeContract.js";
+import { analyzeContractImage } from "../lib/analyzeContract.js";
 
 
 
