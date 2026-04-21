@@ -51,7 +51,7 @@ function ProjectPreview() {
 
   return <>
   <div className="h-screen space-y-20 pb-10">
-    <ContractAnalysis contract={project} />
+    <ContractAnalysis contract={project} loading={loading} />
   </div>
   </>
 

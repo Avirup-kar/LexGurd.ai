@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ContractAnalysis({ contract }) {
+export default function ContractAnalysis({ contract, loading }) {
 
   const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
