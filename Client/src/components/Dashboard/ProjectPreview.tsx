@@ -11,13 +11,13 @@ function ProjectPreview() {
     const [loading, setLoading] = useState(false);
     const [project, setproject] = useState([]);
     
-    const getHistory = async () => {
+    const getProject = async () => {
     try {
       setLoading(true);
       const { data } = await Api.get(`/getApi/getProject/${projectId}`);
       if(!data.success === true) return 
       setproject(data.project);
-      setLoading(false);
+      return data.project;
     } catch (error) {
       console.error(error?.response?.data?.message || error.message)
       console.log(error);
@@ -27,8 +27,27 @@ function ProjectPreview() {
   };
    
    useEffect(() => {
-      getHistory();
-    }, []);
+  // call immediately on mount
+  getProject().then((data) => {
+    if (data?.contractData) {
+      setLoading(false);
+    }
+  });
+
+  // poll every 10 seconds
+  const interval = setInterval(async () => {
+    const data = await getProject();
+
+    // stop only when contractData is available
+    if (data?.contractData) {
+      setLoading(false);
+      clearInterval(interval);
+    }
+  }, 10000);
+
+  // cleanup on unmount
+  return () => clearInterval(interval);
+}, []);
 
   return <>
   <div className="h-screen space-y-20 pb-10">

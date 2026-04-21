@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { v2 as cloudinary } from 'cloudinary'
 import prisma from "../lib/prisma.js";
 import { analyzeContractImage } from "../lib/analyzeContract.js";
+import { Prisma } from "../generated/prisma/client.js";
 
 
 
@@ -32,6 +33,8 @@ export async function addproject(req: Request, res: Response) {
           data: {
             userId: userId as string,
             imageUrl: imageUrl.secure_url as string,
+            contractData: Prisma.JsonNull,    
+            email: Prisma.JsonNull
           }
         })
 
