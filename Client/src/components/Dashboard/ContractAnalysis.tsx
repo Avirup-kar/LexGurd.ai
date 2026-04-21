@@ -2,13 +2,13 @@ import { useState } from "react";
 
 export default function ContractAnalysis({ contract }) {
 
-  const clauses = contract?.clauses ?? [];
+  const clauses = contract?.contractData.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
 
   const dangerCount = clauses.filter(c => c.riskLevel === "danger").length;
   const mediumCount = clauses.filter(c => c.riskLevel === "medium").length;
-  const missingCount = contract?.missingClauses?.length ?? 0;
-  const overallRisk = contract?.overallRisk ? contract.overallRisk.toUpperCase() : "N/A";
+  const missingCount = contract?.contractData.missingClauses?.length ?? 0;
+  const overallRisk = contract?.contractData.overallRisk ? contract.contractData.overallRisk.toUpperCase() : "N/A";
 
   if (!contract || !clauses.length) {
     return (
@@ -28,7 +28,7 @@ export default function ContractAnalysis({ contract }) {
      <div className=" pt-10 pb-5 lg:h-screen lg:sticky lg:top-0 flex flex-col pl-0 lg:pl-8 justify-center items-center overflow-hidden">
            <div>
              <h3 className="font-semibold text-gray-400 text-sm lg:text-[20px] w-[250px] my-4 text-center">
-               {contract.contractTitle}
+               {contract.contractData.contractTitle}
              </h3>
            </div>
            <img
@@ -38,7 +38,7 @@ export default function ContractAnalysis({ contract }) {
            />
            <div>
                 <p className="text-[15px] my-4 text-gray-300 w-[250px] text-center leading-relaxed">
-                  {contract.overallSummary}
+                  {contract.contractData.overallSummary}
                 </p>
               </div>
       </div>
@@ -50,8 +50,8 @@ export default function ContractAnalysis({ contract }) {
         <SummaryCard
           title="OVERALL RISK"
           value={overallRisk}
-          color= {contract.overallRisk === "high" ? "text-red-500" : contract.overallRisk === "medium"? "text-yellow-500" : "text-green-400"}
-          bg={contract.overallRisk === "high" ? "bg-[#2b0d0f]" : contract.overallRisk === "medium"? "bg-yellow-500/20" : "bg-green-500/10"}
+          color= {contract.contractData.overallRisk === "high" ? "text-red-500" : contract.contractData.overallRisk === "medium"? "text-yellow-500" : "text-green-400"}
+          bg={contract.contractData.overallRisk === "high" ? "bg-[#2b0d0f]" : contract.contractData.overallRisk === "medium"? "bg-yellow-500/20" : "bg-green-500/10"}
         />
 
         <SummaryCard
@@ -187,7 +187,7 @@ export default function ContractAnalysis({ contract }) {
 
       
       {/* MISSING CLAUSES */}
-   {contract.missingClauses?.length > 0 && (
+   {contract.contractData.missingClauses?.length > 0 && (
 
     <div className="mt-10 bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6">
 
@@ -196,28 +196,18 @@ export default function ContractAnalysis({ contract }) {
        </h2>
 
       <div className="space-y-3">
-      {contract.missingClauses.map((clause: string, index: number) => (
-        <div
-          key={index}
-          className="flex items-start gap-3 bg-[#0b1220] border border-yellow-500/20 rounded-lg p-3 md:p-4"
-        >
-
+      {contract.contractData.missingClauses.map((clause: string, index: number) => (
+        <div key={index} className="flex items-start gap-3 bg-[#0b1220] border border-yellow-500/20 rounded-lg p-3 md:p-4">
           {/* Warning Dot */}
           <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mt-2"></div>
-
           {/* Text */}
           <p className="text-gray-300 text-sm md:text-base">
             {clause}
           </p>
- 
         </div>
-
-       ))}
-  
+       ))}  
       </div>
-
     </div>
-
    )}
    </div>
     </div>

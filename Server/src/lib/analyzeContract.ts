@@ -45,7 +45,7 @@ Just raw JSON in this exact structure:
   "overallSummary": "string",
   "clauses": [
     {
-      "id": 1,
+      "id": 1, // and this should be in a row like first clause id: 1 and then 2nd clause id: 2 and so on, that's how it should be
       "title": "string",
       "originalText": "string",
       "riskLevel": "safe | medium | danger",
