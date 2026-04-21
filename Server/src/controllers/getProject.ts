@@ -18,10 +18,17 @@ export async function getProjectHistory(req: Request, res: Response){
               createdAt: "desc" // 🔥 latest first
             },
             select: {
+              imageUrl: true,
               id: true,
               contractData: true
             }
          });
+
+         if (!project) {
+          return res.status(404).json({
+             message: "Project not found or access denied"
+          });
+        }
 
          res.status(200).json({ success: true,  project });
     } catch (error: any) {

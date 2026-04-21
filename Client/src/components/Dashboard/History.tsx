@@ -1,4 +1,14 @@
+import { useApi } from "@/config/axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function ContractHistory() {
+  const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([]);
+  const Api = useApi();
+
+  const navigate = useNavigate();
+
   const riskStyles = {
     high: {
       border: "border-red-500/40",
@@ -17,7 +27,7 @@ export default function ContractHistory() {
     },
   };
 
-  const history = [
+  const historyy = [
     {
       id: 1,
       contractTitle: "Freelance Web Dev Agreement",
@@ -48,36 +58,72 @@ export default function ContractHistory() {
     },
   ];
 
+  const getHistory = async () => {
+    try {
+      setLoading(true);
+      const { data } = await Api.get("/getApi/history/getAllProject");
+      if(!data.success === true) return 
+      setHistory(data.project);
+      setLoading(false);
+    } catch (error) {
+      console.error(error?.response?.data?.message || error.message)
+      console.log(error);
+    } finally {
+      setLoading(false); // ✅ ALWAYS runs
+    }
+  };
+
+  useEffect(() => {
+    getHistory();
+  }, []);
+
   return (
-    <div className="p-6">
+    <div className="p-6 pb-96">
       <h2 className="text-lg font-semibold mb-6">Contract History</h2>
 
-      <div className="flex flex-col p-4 gap-4 max-h-[550px] overflow-y-auto">
-        {history.map((contract) => {
-          const style = riskStyles[contract.overallRisk];
+      <div className="flex flex-col justify-center items-center p-4 gap-4 min-h-[550px] lg:h-[550px] overflow-y-auto">
+        {loading ? (
+          // 🔥 Loading UI
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : history?.length === 0 ? (
+          // ❌ No data
+          <div className="text-center text-gray-400 py-10">
+            No history available
+          </div>
+        ) : (
+          // ✅ Data available
+          history?.map((contract) => {
+            const style = riskStyles[contract.contractData?.overallRisk];
 
-          return (
-            <div key={contract.id} className={`p-4 rounded-lg border ${style.border} ${style.bg} cursor-pointer hover:scale-[1.02] transition`}>
-              {/* Top Row */}
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold text-sm">
-                  {contract.contractTitle}
-                </h3>
+            return (
+              <button
+                onClick={() => navigate(`/project/${contract.id}`)}
+                key={contract.id}
+                className={`p-4 rounded-lg border ${style.border} ${style.bg} cursor-pointer hover:scale-[1.02] transition`}
+              >
+                {/* Top Row */}
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold text-sm">
+                    {contract.contractData?.contractTitle}
+                  </h3>
 
-                <p className={`text-xs ${style.text}`}>
-                  {contract.overallRisk.toUpperCase()}
-                </p>
-              </div>
+                  <p className={`text-xs ${style.text}`}>
+                    {contract.contractData?.overallRisk.toUpperCase()}
+                  </p>
+                </div>
 
-              {/* Summary */}
-              <div>
-                <p className="text-xs text-gray-300 leading-relaxed">
-                  {contract.overallSummary}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+                {/* Summary */}
+                <div>
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    {contract.contractData?.overallSummary}
+                  </p>
+                </div>
+              </button>
+            );
+          })
+        )}
       </div>
     </div>
   );
