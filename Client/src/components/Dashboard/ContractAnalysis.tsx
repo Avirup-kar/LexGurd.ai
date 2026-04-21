@@ -2,13 +2,13 @@ import { useState } from "react";
 
 export default function ContractAnalysis({ contract }) {
 
-  const clauses = contract?.contractData.clauses ?? [];
+  const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
 
   const dangerCount = clauses.filter(c => c.riskLevel === "danger").length;
   const mediumCount = clauses.filter(c => c.riskLevel === "medium").length;
-  const missingCount = contract?.contractData.missingClauses?.length ?? 0;
-  const overallRisk = contract?.contractData.overallRisk ? contract.contractData.overallRisk.toUpperCase() : "N/A";
+  const missingCount = contract?.contractData?.missingClauses?.length ?? 0;
+  const overallRisk = contract?.contractData?.overallRisk ? contract.contractData.overallRisk.toUpperCase() : "N/A";
 
   if (!contract || !clauses.length) {
     return (

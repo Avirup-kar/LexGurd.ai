@@ -60,6 +60,7 @@ Just raw JSON in this exact structure:
 Rules:
 - riskLevel must be exactly: "safe", "medium", or "danger"
 - solution must be null if riskLevel is "safe"
+- and if the riskLeve is safe in any clause the plainEnglish and consequence should be null 
 - originalText must be the exact clause text from the contract
 - plainEnglish must be in simple language a non-lawyer understands and in easy english word
 - if no missingClauses just add null
