@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from "express"
 import { clerkMiddleware, requireAuth } from '@clerk/express';
 import cors from 'cors'
-import addprojectRouter from "./routes/getProject.js";
+import getProjectRouter from "./routes/getProject.js";
 
 const app = express()
 const port = 3000
@@ -16,7 +16,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use(requireAuth());
 
 //Routes
-app.use("/getApi", addprojectRouter);
+app.use("/getApi", getProjectRouter);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
