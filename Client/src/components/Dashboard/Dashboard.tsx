@@ -1,81 +1,75 @@
-'use client'
+"use client";
 
-import { useState, useRef } from "react"
-import { motion } from "framer-motion"
-import { Upload, X } from "lucide-react"
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Upload, X } from "lucide-react";
 
 export default function UploadContract() {
-
-  const [file, setFile] = useState(null)
-  const [preview, setPreview] = useState(null)
-  const inputRef = useRef(null)
-  const [dragging, setDragging] = useState(false)
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const inputRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFile = (e) => {
+    e.preventDefault();
+    const selected = e.target.files[0];
+    if (!selected) return;
 
-    const selected = e.target.files[0]
-    if (!selected) return
-
-    setFile(selected)
+    setFile(selected);
 
     if (selected.type.startsWith("image/")) {
-      const url = URL.createObjectURL(selected)
-      setPreview(url)
+      const url = URL.createObjectURL(selected);
+      setPreview(url);
     } else {
-      setPreview(null)
-      setFile(null)
-      alert('Only image accepeted')
+      setPreview(null);
+      setFile(null);
+      alert("Only image accepeted");
     }
+  };
 
-  }
+  const handelSubmit = async () => {};
 
   const removeFile = () => {
+    setFile(null);
+    setPreview(null);
 
-    setFile(null)
-    setPreview(null)
-
-    if (inputRef.current) inputRef.current.value = ""
-
-  }
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   const openFile = () => {
-    inputRef.current?.click()
-  }
+    inputRef.current?.click();
+  };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragging(true);
+  };
 
-const handleDragOver = (e) => {
-  e.preventDefault()
-  setDragging(true)
-}
+  const handleDragLeave = () => {
+    setDragging(false);
+  };
 
-const handleDragLeave = () => {
-  setDragging(false)
-}
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false);
 
-const handleDrop = (e) => {
-  e.preventDefault()
-  setDragging(false)
+    const droppedFile = e.dataTransfer.files[0];
+    if (!droppedFile) return;
 
-  const droppedFile = e.dataTransfer.files[0]
-  if (!droppedFile) return
+    setFile(droppedFile);
 
-  setFile(droppedFile)
-
-  if (droppedFile.type.startsWith("image/")) {
-    setPreview(URL.createObjectURL(droppedFile))
-  }
-  else{
-    setFile(null)
-    alert('Only image accepeted')
-  }
-}
+    if (droppedFile.type.startsWith("image/")) {
+      setPreview(URL.createObjectURL(droppedFile));
+    } else {
+      setFile(null);
+      alert("Only image accepeted");
+    }
+  };
 
   return (
-
     <div className="min-h-screen flex items-center justify-center p-6">
-
       <div className="w-full max-w-xl">
-
         {/* Title */}
         <div className="text-center mb-10">
           <h1 className="text-3xl font-semibold text-white mb-3">
@@ -83,25 +77,21 @@ const handleDrop = (e) => {
           </h1>
 
           <p className="text-gray-400 text-sm">
-            Upload your contract to analyze risks and store it securely
-            for future legal verification.
+            Upload your contract to analyze risks and store it securely for
+            future legal verification.
           </p>
         </div>
 
         {/* Upload Box */}
         <motion.div
-  whileHover={{ scale: 1.02 }}
-  onClick={openFile}
-  onDragOver={handleDragOver}
-  onDragLeave={handleDragLeave}
-  onDrop={handleDrop}
-  className={`relative cursor-pointer border-2 border-dashed rounded-xl p-10 transition
-  ${dragging
-    ? "border-blue-500"
-    : "border-blue-500/30"
-  }`}
->
-
+          whileHover={{ scale: 1.02 }}
+          onClick={openFile}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`relative cursor-pointer border-2 border-dashed rounded-xl p-10 transition
+  ${dragging ? "border-blue-500" : "border-blue-500/30"}`}
+        >
           <input
             ref={inputRef}
             type="file"
@@ -113,8 +103,8 @@ const handleDrop = (e) => {
           {file && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                removeFile()
+                e.stopPropagation();
+                removeFile();
               }}
               className="absolute top-3 right-3 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-full p-1 transition"
             >
@@ -124,15 +114,12 @@ const handleDrop = (e) => {
 
           {/* Preview */}
           {preview ? (
-
             <img
               src={preview}
               alt="contract preview"
               className="max-h-64 mx-auto rounded-lg object-contain"
             />
-
           ) : file ? (
-
             <div className="flex flex-col items-center gap-3">
               <div className="text-blue-400 text-3xl">📄</div>
               <p className="text-sm text-gray-200">{file.name}</p>
@@ -140,38 +127,38 @@ const handleDrop = (e) => {
                 {(file.size / (1024 * 1024)).toFixed(2)} MB
               </p>
             </div>
-
           ) : (
-
             <div className="flex flex-col items-center gap-4">
-
               <Upload size={28} className="text-blue-400" />
 
               <p className="text-gray-300 text-sm">
                 Drag & drop your contract here
               </p>
 
-              <p className="text-gray-500 text-xs">
-                or click to browse files
-              </p>
-
+              <p className="text-gray-500 text-xs">or click to browse files</p>
             </div>
-
           )}
-
         </motion.div>
 
         {/* Verify Button */}
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          className="w-full mt-8 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-medium transition"
+          whileHover={!loading ? { scale: 1.02 } : {}}
+          whileTap={!loading ? { scale: 0.97 } : {}}
+          onClick={handelSubmit}
+          disabled={loading}
+          className="w-full mt-8 bg-blue-600 flex justify-center items-center gap-4 
+             hover:bg-blue-500 text-white py-3 rounded-lg font-medium transition
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
         >
-          Verify Contract
+          {!loading ? (
+            "Verify Contract"
+          ) : (
+            <div className="flex justify-center items-center w-full h-full">
+              <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
         </motion.button>
-
       </div>
-
     </div>
-  )
+  );
 }
