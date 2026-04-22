@@ -21,11 +21,16 @@ interface ContractAnalysis {
 }
 
 const parseGeminiResponse = (rawText: string): ContractAnalysis => {
-  const cleaned = rawText
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
-  return JSON.parse(cleaned);
+  try {
+    const cleaned = rawText
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    return JSON.parse(cleaned);
+  } catch (error) {
+    throw new Error("Gemini returned invalid JSON — try uploading a clearer image");
+  }
 };
 
 export const analyzeContractImage = async (
@@ -35,8 +40,8 @@ export const analyzeContractImage = async (
 
 try {
   const prompt = `
-You are a legal contract analyzer. Analyze the contract text below.
-Return ONLY a valid JSON object. No explanation, no markdown, no extra text.
+You are a legal contract analyzer. Analyze the contract image provided.
+Return ONLY a valid JSON object. No explanation, no markdown, no extra text, no comments.
 Just raw JSON in this exact structure:
 
 {
@@ -45,26 +50,29 @@ Just raw JSON in this exact structure:
   "overallSummary": "string",
   "clauses": [
     {
-      "id": 1, // and this should be in a row like first clause id: 1 and then 2nd clause id: 2 and so on, that's how it should be
+      "id": 1,
       "title": "string",
       "originalText": "string",
       "riskLevel": "safe | medium | danger",
-      "plainEnglish": "string",
-      "consequence": "string",
+      "plainEnglish": "string or null",
+      "consequence": "string or null",
       "solution": "string or null"
     }
   ],
-  "missingClauses": ["string", "string"] | null
+  "missingClauses": ["string"] | null
 }
 
 Rules:
-- riskLevel must be exactly: "safe", "medium", or "danger"
+- id must be sequential starting from 1 — first clause is 1, second is 2, third is 3 and so on
+- riskLevel must be exactly: "safe", "medium", or "danger" — no other values
+- if riskLevel is "safe" then plainEnglish, consequence and solution must all be null
+- if riskLevel is "medium" or "danger" then plainEnglish and consequence must have real text
 - solution must be null if riskLevel is "safe"
-- and if the riskLeve is safe in any clause the plainEnglish and consequence should be null 
-- originalText must be the exact clause text from the contract
-- plainEnglish must be in simple language a non-lawyer understands and in easy english word
-- if no missingClauses just add null
-- Extract all text from the image first, then analyze it
+- originalText must be the exact clause text copied from the contract
+- plainEnglish must be in very simple language a non-lawyer can understand
+- missingClauses must be null if there are no missing clauses
+- Extract all text from the image first before analyzing
+- Return absolutely nothing except the JSON object
 `;
 
    const result = await ai.models.generateContent({
