@@ -1,17 +1,18 @@
+import 'dotenv/config';
 import express, { type Request, type Response } from "express"
-import { clerkMiddleware, requireAuth } from '@clerk/express';
+import { clerkMiddleware } from '@clerk/express';
 import cors from 'cors'
 import getProjectRouter from "./routes/getProject.js";
 import addprojectRouter from "./routes/addProject.js";
+import connectCloudinary from './configs/cloudinary.js';
 
+await connectCloudinary();
 const app = express()
 const port = 3000
 
 app.use(cors())
 app.use(express.json());
-app.use(clerkMiddleware({
-    secretKey: process.env.CLERK_SECRET_KEY!,
-  }));
+app.use(clerkMiddleware());
 
 
 app.get('/', (req: Request, res: Response) => {

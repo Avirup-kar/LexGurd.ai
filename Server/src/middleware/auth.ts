@@ -11,12 +11,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
           return res.json({ success: false, message: "User unauthorised login first." });
         }
 
-        const user = await clerkClient.users.getUser(userId);
-    
-        if (!user) {
-          return res.json({ success: false, message: "User not found." });
-        }
-
         next();
     } catch (error: any) {
         return res.status(500).json({
