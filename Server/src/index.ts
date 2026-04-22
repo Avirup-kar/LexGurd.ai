@@ -14,7 +14,6 @@ app.use(clerkMiddleware());
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
 })
-app.use(requireAuth());
 
 //Routes
 app.use("/getApi", getProjectRouter);
