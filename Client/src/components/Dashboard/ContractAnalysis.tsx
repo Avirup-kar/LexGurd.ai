@@ -32,7 +32,7 @@ export default function ContractAnalysis({ contract, loading }) {
              </h3>
            </div>
            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4yM9O0KyzXOTB3D6MWrJ8IVOG-OQgQma-zw&s"
+              src={contract?.imageUrl ? contract.imageUrl : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4yM9O0KyzXOTB3D6MWrJ8IVOG-OQgQma-zw&s"}
               alt="Contract Preview"
               className=" w-[170px] md:w-[200px] lg:w-[250px] h-[240px] md:h-[300px] lg:h-[350px] object-cover rounded-lg shadow-lg border border-white/10"
            />

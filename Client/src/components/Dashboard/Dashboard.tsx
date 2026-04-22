@@ -3,8 +3,12 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
+import { useApi } from "@/config/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadContract() {
+  const navigate = useNavigate();
+  const Api = useApi();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const inputRef = useRef(null);
@@ -28,7 +32,29 @@ export default function UploadContract() {
     }
   };
 
-  const handelSubmit = async () => {};
+  const handelSubmit = async () => {
+    try {
+      setLoading(true);
+
+       const fromData = new FormData();
+       fromData.append('image', file)
+
+       if(!file) return
+
+        // Simulate API call
+        const {data} = await Api.post("/addApi/addProject", fromData);
+
+        if(!data.success) {
+          alert(data.message || "Failed to upload contract");
+          return;
+        }
+
+        navigate(`/project/${data.projectId}`);
+    } catch (error) {
+      console.error(error?.response?.data?.message || error.message)
+      console.log(error);
+    }
+  }
 
   const removeFile = () => {
     setFile(null);
