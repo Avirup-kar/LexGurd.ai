@@ -33,16 +33,21 @@ export default function UploadContract() {
   };
 
   const handelSubmit = async () => {
+    if (!file) {
+     alert("Please select a file first");
+     return;
+    }
+
     try {
       setLoading(true);
 
        const fromData = new FormData();
        fromData.append('image', file)
 
-       if(!file) return
-
         // Simulate API call
         const {data} = await Api.post("/addApi/addProject", fromData);
+
+        setLoading(false);
 
         if(!data.success) {
           alert(data.message || "Failed to upload contract");
@@ -53,6 +58,8 @@ export default function UploadContract() {
     } catch (error) {
       console.error(error?.response?.data?.message || error.message)
       console.log(error);
+    } finally {
+      setLoading(false); // ✅ always reset loading
     }
   }
 

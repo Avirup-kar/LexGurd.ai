@@ -9,7 +9,10 @@ const port = 3000
 
 app.use(cors())
 app.use(express.json());
-app.use(clerkMiddleware());
+app.use(clerkMiddleware({
+    secretKey: process.env.CLERK_SECRET_KEY!,
+  }));
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
