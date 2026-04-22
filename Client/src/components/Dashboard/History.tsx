@@ -87,7 +87,7 @@ export default function ContractHistory() {
           <div className="flex justify-center items-center w-full h-full">
             <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : history?.length === 0 ? (
+        ) : !history?.length ? (
           // ❌ No data
           <div className="text-center text-gray-400 py-10">
             No history available
@@ -95,29 +95,29 @@ export default function ContractHistory() {
         ) : (
           // ✅ Data available
           history?.map((contract) => {
-            const style = riskStyles[contract.contractData?.overallRisk];
+            const style = riskStyles[contract?.contractData?.overallRisk];
 
             return (
               <button
-                onClick={() => navigate(`/project/${contract.id}`)}
+                onClick={() => navigate(`/project/${contract?.id}`)}
                 key={contract.id}
-                className={`p-4 rounded-lg border ${style.border} ${style.bg} cursor-pointer hover:scale-[1.02] transition`}
+                className={`p-4 rounded-lg border ${style?.border} ${style?.bg} cursor-pointer hover:scale-[1.02] transition`}
               >
                 {/* Top Row */}
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-semibold text-sm">
-                    {contract.contractData?.contractTitle}
+                    {contract?.contractData?.contractTitle}
                   </h3>
 
-                  <p className={`text-xs ${style.text}`}>
-                    {contract.contractData?.overallRisk.toUpperCase()}
+                  <p className={`text-xs ${style?.text}`}>
+                    {contract?.contractData?.overallRisk.toUpperCase()}
                   </p>
                 </div>
 
                 {/* Summary */}
                 <div>
                   <p className="text-xs text-gray-300 leading-relaxed">
-                    {contract.contractData?.overallSummary}
+                    {contract?.contractData?.overallSummary}
                   </p>
                 </div>
               </button>

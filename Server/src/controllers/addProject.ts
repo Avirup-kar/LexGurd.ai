@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 import { v2 as cloudinary } from 'cloudinary'
 import prisma from "../lib/prisma.js";
 import { analyzeContractImage } from "../lib/analyzeContract.js";
+import sharp from "sharp";
+import Tesseract from "tesseract.js";
 
 
 
@@ -35,23 +37,35 @@ export async function addproject(req: Request, res: Response) {
       },
     });
 
+  // ✅ Clean image for better OCR
+  const cleanImage = await sharp(image.buffer)
+    .resize({ width: 1000 })
+    .grayscale()
+    .toBuffer();
+
+    const result = await Tesseract.recognize(cleanImage, "eng");
+
+    const extractedText = result.data.text;
+
+    console.log("OCR TEXT:", extractedText);
+
     // 🔥 Gemini processing
-    const base64ForGemini = image.buffer.toString("base64");
-    const mimeType = image.mimetype;
+    // const base64ForGemini = compressedBuffer.toString("base64");
+    // const mimeType = image.mimetype;
 
-    const contractData = await analyzeContractImage(base64ForGemini, mimeType);
+    // const contractData = await analyzeContractImage(base64ForGemini, mimeType);
 
-    await prisma.project.update({
-      where: { id: createProject.id },
-      data: {
-        contractData: JSON.parse(JSON.stringify(contractData)),
-      },
-    });
+    // await prisma.project.update({
+    //   where: { id: createProject.id },
+    //   data: {
+    //     contractData: JSON.parse(JSON.stringify(contractData)),
+    //   },
+    // });
 
     // ✅ ONLY ONE RESPONSE
     return res.json({
       success: true,
-      projectId: createProject.id,
+      // projectId: createProject.id,
     });
 
   } catch (error: any) {

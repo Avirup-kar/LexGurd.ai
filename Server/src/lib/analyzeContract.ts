@@ -1,4 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
@@ -22,6 +24,7 @@ interface ContractAnalysis {
 
 const parseGeminiResponse = (rawText: string): ContractAnalysis => {
   try {
+    
     const cleaned = rawText
       .replace(/```json/g, "")
       .replace(/```/g, "")
@@ -39,11 +42,12 @@ export const analyzeContractImage = async (
 ): Promise<ContractAnalysis> => {
 
 try {
-  const prompt = `
-You are a legal contract analyzer. Analyze the contract image provided.
-Return ONLY a valid JSON object. No explanation, no markdown, no extra text, no comments.
-Just raw JSON in this exact structure:
+const prompt = `
+You are a legal contract analyzer. Analyze the provided contract image.
 
+Return ONLY a valid JSON object. No explanation, no markdown, no extra text.
+
+Structure:
 {
   "contractTitle": "string",
   "overallRisk": "low | medium | high",
@@ -63,20 +67,18 @@ Just raw JSON in this exact structure:
 }
 
 Rules:
-- id must be sequential starting from 1 — first clause is 1, second is 2, third is 3 and so on
-- riskLevel must be exactly: "safe", "medium", or "danger" — no other values
-- if riskLevel is "safe" then plainEnglish, consequence and solution must all be null
-- if riskLevel is "medium" or "danger" then plainEnglish and consequence must have real text
-- solution must be null if riskLevel is "safe"
-- originalText must be the exact clause text copied from the contract
-- plainEnglish must be in very simple language a non-lawyer can understand
-- missingClauses must be null if there are no missing clauses
-- Extract all text from the image first before analyzing
-- Return absolutely nothing except the JSON object
+- riskLevel must be exactly: "safe", "medium", or "danger"
+- If riskLevel = "safe" → plainEnglish, consequence, solution = null
+- solution must be null when riskLevel = "safe"
+- originalText must match the exact clause text
+- plainEnglish must be simple and with easy word
+- Output ONLY the JSON object
 `;
 
+console.log("🔥 Gemini API HIT");
+
    const result = await ai.models.generateContent({
-    model: "gemini-2.5-flash-preview-04-17",
+    model: "gemini-2.0-flash",
     contents: [
       {
         inlineData: {
