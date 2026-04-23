@@ -50,7 +50,7 @@ export async function addproject(req: Request, res: Response) {
 
     const extractedText = result.data.text;
 
-    console.log("OCR TEXT:", extractedText);
+    // console.log("OCR TEXT:", extractedText);
 
     // 🔥 Gemini processing
     // const base64ForGemini = compressedBuffer.toString("base64");
