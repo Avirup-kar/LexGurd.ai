@@ -1,6 +1,11 @@
+import { useApi } from "@/config/axios";
 import { useState } from "react";
 
 export default function ContractAnalysis({ contract, loading }) {
+
+  const Api = useApi();
+  const [emailData, setEmailData] = useState(null);
+  const [emailLoading, setEmailLoading] = useState(false);
 
   const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
@@ -11,6 +16,24 @@ export default function ContractAnalysis({ contract, loading }) {
   const overallRisk = contract?.contractData?.overallRisk
     ? contract.contractData.overallRisk.toUpperCase()
     : "N/A";
+
+   if(contract?.contractData?.email) {
+    setEmailData(contract.contractData.email);
+   }
+
+    const handleGenerateEmail = async () => {
+    try {
+         setEmailLoading(true);
+         
+         const {data} = await Api.post("/addApi/addProject");
+
+         setEmailData(data.email); // { subject, body }
+       } catch (err) {
+         console.error("Email generation failed", err);
+       } finally {
+         setEmailLoading(false);
+       }
+    };
 
   // ✅ LOADING STATE
   if (loading) {
@@ -167,10 +190,56 @@ export default function ContractAnalysis({ contract, loading }) {
           </div>
         )}
 
+
+        {/* EMAIL SECTION */}
+
+{/* 🔴 Show button only if NOT safe and email not generated */}
+{contract.contractData.overallRisk !== "safe" && !emailData && (
+  <div className="mt-10 bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6 text-center">
+
+    <p className={` ${contract.contractData.overallRisk === "danger" ? "text-red-400" : "text-yellow-400" } mb-4 text-sm md:text-base`}>
+      ⚠️ This contract has {overallRisk} risk. Generate a negotiation email to protect yourself.
+    </p>
+
+    <button
+      onClick={handleGenerateEmail}
+      disabled={emailLoading}
+      className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-medium transition"
+    >
+      {emailLoading ? "Generating..." : "Create Email"}
+    </button>
+  </div>
+)}
+
+{/* 🟢 Show email AFTER generated */}
+{emailData && (
+  <div className="mt-10 bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6">
+
+    <h2 className="text-base md:text-lg font-semibold mb-4">
+      Generated Email
+    </h2>
+
+    <div className="space-y-4">
+      <div>
+        <p className="text-gray-400 text-sm">Subject</p>
+        <p className="text-white font-medium">
+          {emailData.subject}
+        </p>
+      </div>
+
+      <div>
+        <p className="text-gray-400 text-sm">Body</p>
+        <div className="bg-[#0b1220] border border-white/10 rounded-lg p-3 md:p-4 text-gray-300 text-sm md:text-base whitespace-pre-line">
+          {emailData.body}
+        </div>
       </div>
     </div>
-  );
-}
+
+  </div>
+)}
+      </div>
+    </div>
+  );}
 
 function SummaryCard({ title, value, color, bg }) {
   return (
