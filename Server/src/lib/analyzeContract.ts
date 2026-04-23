@@ -1,16 +1,17 @@
-import { GoogleGenAI } from "@google/genai";
-import dotenv from 'dotenv';
-dotenv.config();
+import OpenAI from "openai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const AI = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY!,
+  baseURL: "https://api.groq.com/openai/v1",
+});
 
 interface Clause {
   id: number;
   title: string;
   originalText: string;
   riskLevel: "safe" | "medium" | "danger";
-  plainEnglish: string;
-  consequence: string;
+  plainEnglish: string | null;
+  consequence: string | null;
   solution: string | null;
 }
 
@@ -24,7 +25,6 @@ interface ContractAnalysis {
 
 const parseGeminiResponse = (rawText: string): ContractAnalysis => {
   try {
-    
     const cleaned = rawText
       .replace(/```json/g, "")
       .replace(/```/g, "")
@@ -37,17 +37,14 @@ const parseGeminiResponse = (rawText: string): ContractAnalysis => {
 };
 
 export const analyzeContractImage = async (
-  base64ImageData: string,
-  mimeType: string = "image/jpeg"
+  contractText: string,
 ): Promise<ContractAnalysis> => {
+  try {
+    const prompt = `
+You are a legal contract analyzer. Analyze the contract text below.
+Return ONLY a valid JSON object. No explanation, no markdown, no extra text, no comments.
+Just raw JSON in this exact structure:
 
-try {
-const prompt = `
-You are a legal contract analyzer. Analyze the provided contract image.
-
-Return ONLY a valid JSON object. No explanation, no markdown, no extra text.
-
-Structure:
 {
   "contractTitle": "string",
   "overallRisk": "low | medium | high",
@@ -67,36 +64,42 @@ Structure:
 }
 
 Rules:
+- id must be sequential starting from 1
 - riskLevel must be exactly: "safe", "medium", or "danger"
-- If riskLevel = "safe" → plainEnglish, consequence, solution = null
-- solution must be null when riskLevel = "safe"
-- originalText must match the exact clause text
-- plainEnglish must be simple and with easy word
-- Output ONLY the JSON object
-`;
+- if riskLevel is "safe" then consequence and solution must be null but plainEnglish should not be null
+- solution must be null if riskLevel is "safe"
+- originalText must be the exact clause text copied from the contract
+- plainEnglish must be in very simple language a non-lawyer can understand and in easy word
+- missingClauses must be null if there are no missing clauses
+- Return absolutely nothing except the JSON object
 
-console.log("🔥 Gemini API HIT");
+Contract text:
+${contractText}
+    `;
 
-   const result = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: [
-      {
-        inlineData: {
-          mimeType: mimeType,
-          data: base64ImageData,
-        }
-      },
-      { text: prompt }
-    ]
-  });
+    console.log("🔥 Gemini API HIT");
 
-  return parseGeminiResponse(result.text!);
+    const response = await AI.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.2,
+       max_tokens: 8000,
+    });
+
+    const content = response.choices[0]?.message.content!;
+    return parseGeminiResponse(content);
 
   } catch (error: any) {
-
-    // Gemini API errors
+    console.log(error.status)   // what status code?
+    console.log(error.message)  // what exact message?
+    console.log(error)  
     if (error.status === 400) {
-      throw new Error("Invalid image — make sure the file is a clear readable contract");
+      throw new Error("Invalid request — make sure the contract text is readable");
     }
 
     if (error.status === 429) {
@@ -107,12 +110,10 @@ console.log("🔥 Gemini API HIT");
       throw new Error("Invalid API key — check your GEMINI_API_KEY in .env");
     }
 
-    // JSON parse error — Gemini returned text instead of JSON
     if (error instanceof SyntaxError) {
-      throw new Error("Gemini could not analyze this document — try a clearer image");
+      throw new Error("Gemini could not analyze this document — try again");
     }
 
-    // anything else
     throw new Error(error.message || "Failed to analyze contract");
   }
 };

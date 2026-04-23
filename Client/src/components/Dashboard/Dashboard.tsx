@@ -53,7 +53,7 @@ export default function UploadContract() {
           alert(data.message || "Failed to upload contract");
           return;
         }
-        console.log(data);
+        console.log('okkk', data.message);
 
         // navigate(`/project/${data.projectId}`);
     } catch (error) {

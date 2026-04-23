@@ -63,7 +63,7 @@ export default function ContractHistory() {
       setLoading(true);
       const { data } = await Api.get("/getApi/history/getAllProject");
       if(!data.success === true) return 
-      setHistory(data.project);
+      setHistory(data?.project);
       setLoading(false);
     } catch (error) {
       console.error(error?.response?.data?.message || error.message)
@@ -81,13 +81,13 @@ export default function ContractHistory() {
     <div className="p-6 pb-96">
       <h2 className="text-lg font-semibold mb-6">Contract History</h2>
 
-      <div className="flex flex-col justify-center items-center p-4 gap-4 min-h-[550px] lg:h-[550px] overflow-y-auto">
+      <div className="flex flex-col p-4 gap-4 min-h-[550px] lg:h-[550px] overflow-y-auto">
         {loading ? (
           // 🔥 Loading UI
           <div className="flex justify-center items-center w-full h-full">
             <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : !history?.length ? (
+        ) : history?.length === 0 ? (
           // ❌ No data
           <div className="text-center text-gray-400 py-10">
             No history available
@@ -101,10 +101,10 @@ export default function ContractHistory() {
               <button
                 onClick={() => navigate(`/project/${contract?.id}`)}
                 key={contract.id}
-                className={`p-4 rounded-lg border ${style?.border} ${style?.bg} cursor-pointer hover:scale-[1.02] transition`}
+                className={`p-4 rounded-lg border ${style?.border} ${style?.bg} cursor-pointer flex flex-col items-start hover:scale-[1.02] transition`}
               >
                 {/* Top Row */}
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center w-full mb-2">
                   <h3 className="font-semibold text-sm">
                     {contract?.contractData?.contractTitle}
                   </h3>

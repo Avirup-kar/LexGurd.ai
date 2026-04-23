@@ -3,10 +3,7 @@ import { type NextFunction, type Request, type Response } from "express"
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("auth header:", req.headers.authorization);
         const { userId } = getAuth(req);
-        console.log("userId:", userId);
-
         if(!userId) {
           return res.json({ success: false, message: "User unauthorised login first." });
         }

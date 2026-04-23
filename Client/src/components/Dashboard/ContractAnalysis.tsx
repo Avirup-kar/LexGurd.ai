@@ -148,16 +148,16 @@ export default function ContractAnalysis({ contract, loading }) {
           {selectedClause && (
             <>
               <h3 className="text-lg md:text-xl font-semibold mb-2">
-                {selectedClause.title}
+                <span className="font-semibold">Title:</span> {selectedClause.title}
               </h3>
 
               <p className="text-gray-400 text-sm md:text-base mb-4">
-                {selectedClause.plainEnglish}
+                {selectedClause.plainEnglish && <span className="font-semibold text-white">Plain English:</span>} {selectedClause.plainEnglish}
               </p>
 
               {selectedClause.consequence && (
                 <p className="text-red-400 text-sm md:text-base mb-6">
-                  {selectedClause.consequence}
+                 <span className="font-semibold text-xl">Consequence:</span> {selectedClause.consequence}
                 </p>
               )}
 

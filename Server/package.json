@@ -17,6 +17,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "multer": "^2.1.1",
+    "openai": "^6.34.0",
     "pg": "^8.20.0",
     "sharp": "^0.34.5",
     "tesseract.js": "^7.0.0"
@@ -29,6 +30,6 @@
     "nodemon": "^3.1.11",
     "prisma": "^7.7.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

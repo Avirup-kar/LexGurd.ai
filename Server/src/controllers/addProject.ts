@@ -10,8 +10,10 @@ import Tesseract from "tesseract.js";
 
 export async function addproject(req: Request, res: Response) {
   try {
+    console.log("🔥 API HIT");
     const { userId } = getAuth(req);
     const image = req.file;
+
 
     if (!userId) {
       return res.status(401).json({
@@ -37,11 +39,12 @@ export async function addproject(req: Request, res: Response) {
       },
     });
 
+    console.log("comming")
   // ✅ Clean image for better OCR
   const cleanImage = await sharp(image.buffer)
-    .resize({ width: 1000 })
-    .grayscale()
-    .toBuffer();
+  .resize({ width: 1000, withoutEnlargement: true })
+  .normalize() // 🔥 better than grayscale sometimes
+  .toBuffer();
 
     const result = await Tesseract.recognize(cleanImage, "eng");
 
@@ -53,19 +56,19 @@ export async function addproject(req: Request, res: Response) {
     // const base64ForGemini = compressedBuffer.toString("base64");
     // const mimeType = image.mimetype;
 
-    // const contractData = await analyzeContractImage(base64ForGemini, mimeType);
+    const contractData = await analyzeContractImage(extractedText);
 
-    // await prisma.project.update({
-    //   where: { id: createProject.id },
-    //   data: {
-    //     contractData: JSON.parse(JSON.stringify(contractData)),
-    //   },
-    // });
+     await prisma.project.update({
+      where: { id: createProject.id },
+      data: {
+        contractData: JSON.parse(JSON.stringify(contractData)),
+      },
+    });
 
     // ✅ ONLY ONE RESPONSE
     return res.json({
       success: true,
-      // projectId: createProject.id,
+      projectId: createProject.id,
     });
 
   } catch (error: any) {
