@@ -164,10 +164,13 @@ export default function ContractAnalysis({ contract, loading }) {
                   <span className="font-semibold">Title:</span> {selectedClause.title}
                 </h3>
                 <p className="text-gray-400 text-sm md:text-base mb-4">
+                  <span className="font-semibold text-xl text-gray-200">Original clause from contract:</span> {selectedClause.originalText}
+                </p>
+                <p className="text-gray-400 text-sm md:text-base mb-4">
                   {selectedClause.plainEnglish && <span className="font-semibold text-white">Plain English:</span>} {selectedClause.plainEnglish}
                 </p>
                 {selectedClause.consequence && (
-                  <p className="text-red-400 text-sm md:text-base mb-6">
+                  <p className={` ${selectedClause.riskLevel === "danger" ? "text-red-400" : selectedClause.riskLevel === "medium" ? "text-yellow-400" : "text-green-400"} text-sm md:text-base mb-6`}>
                     <span className="font-semibold text-xl">Consequence:</span> {selectedClause.consequence}
                   </p>
                 )}
