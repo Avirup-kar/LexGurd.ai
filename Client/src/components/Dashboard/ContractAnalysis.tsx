@@ -1,11 +1,12 @@
 import { useApi } from "@/config/axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ContractAnalysis({ contract, loading }) {
 
   const Api = useApi();
   const [emailData, setEmailData] = useState(null);
   const [emailLoading, setEmailLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
@@ -17,15 +18,21 @@ export default function ContractAnalysis({ contract, loading }) {
     ? contract.contractData.overallRisk.toUpperCase()
     : "N/A";
 
-   if(contract?.contractData?.email) {
-    setEmailData(contract.contractData.email);
-   }
+   useEffect(() => {
+  if (contract?.email && !emailData) {
+    setEmailData(contract.email);
+  }
+}, [contract?.email]);
 
     const handleGenerateEmail = async () => {
     try {
+         if(!contract?.id) {
+           alert("Contract ID is missing. Cannot generate email.");
+           return;
+         }
          setEmailLoading(true);
          
-         const {data} = await Api.post("/addApi/addProject");
+         const {data} = await Api.post("/addApi/createEmail", {projectId: contract?.id});
 
          setEmailData(data.email); // { subject, body }
        } catch (err) {
@@ -215,27 +222,41 @@ export default function ContractAnalysis({ contract, loading }) {
 {emailData && (
   <div className="mt-10 bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6">
 
-    <h2 className="text-base md:text-lg font-semibold mb-4">
-      Generated Email
-    </h2>
+  <h2 className="text-base md:text-lg font-semibold mb-4">
+    Generated Email
+  </h2>
 
-    <div className="space-y-4">
-      <div>
-        <p className="text-gray-400 text-sm">Subject</p>
-        <p className="text-white font-medium">
-          {emailData.subject}
-        </p>
-      </div>
-
-      <div>
-        <p className="text-gray-400 text-sm">Body</p>
-        <div className="bg-[#0b1220] border border-white/10 rounded-lg p-3 md:p-4 text-gray-300 text-sm md:text-base whitespace-pre-line">
-          {emailData.body}
-        </div>
-      </div>
+  <div className="space-y-4">
+    <div>
+      <p className="text-gray-400 text-sm">Subject</p>
+      <p className="text-white font-medium">
+        {emailData.subject}
+      </p>
     </div>
 
+    <div>
+      <p className="text-gray-400 text-sm">Body</p>
+
+      <div className="relative bg-[#0b1220] border border-white/10 rounded-lg p-3 md:p-4 text-gray-300 text-sm md:text-base whitespace-pre-line">
+
+        {/* Copy Button */}
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(emailData.body);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          className="absolute top-2 right-2 text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded-md text-gray-300 transition"
+        >
+          {copied ? "Copied!" : "Copy"}
+        </button>
+
+        {emailData.body}
+      </div>
+    </div>
   </div>
+
+</div>
 )}
       </div>
     </div>

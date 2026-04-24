@@ -110,7 +110,7 @@ export default function ContractHistory() {
                   </h3>
 
                   <p className={`text-xs ${style?.text}`}>
-                    {contract?.contractData?.overallRisk.toUpperCase()}
+                    {contract?.contractData?.overallRisk?.toUpperCase()}
                   </p>
                 </div>
 
