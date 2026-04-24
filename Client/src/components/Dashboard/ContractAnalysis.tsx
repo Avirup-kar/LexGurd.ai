@@ -7,6 +7,7 @@ export default function ContractAnalysis({ contract, loading }) {
   const [emailData, setEmailData] = useState(null);
   const [emailLoading, setEmailLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedSubject, setCopiedSubject] = useState(false);
 
   const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
@@ -227,12 +228,26 @@ export default function ContractAnalysis({ contract, loading }) {
   </h2>
 
   <div className="space-y-4">
-    <div>
-      <p className="text-gray-400 text-sm">Subject</p>
-      <p className="text-white font-medium">
-        {emailData.subject}
-      </p>
-    </div>
+    <div className="flex items-start justify-between">
+  <div>
+    <p className="text-gray-400 text-sm">Subject</p>
+    <p className="text-white font-medium">
+      {emailData.subject}
+    </p>
+  </div>
+
+  {/* Copy Button */}
+  <button
+    onClick={() => {
+      navigator.clipboard.writeText(emailData.subject);
+      setCopiedSubject(true);
+      setTimeout(() => setCopiedSubject(false), 1500);
+    }}
+    className="text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded-md text-gray-300 transition"
+  >
+    {copiedSubject ? "Copied!" : "Copy"}
+  </button>
+</div>
 
     <div>
       <p className="text-gray-400 text-sm">Body</p>
