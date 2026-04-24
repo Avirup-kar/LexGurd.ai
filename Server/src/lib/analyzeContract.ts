@@ -70,7 +70,7 @@ Rules:
 - solution must be null if riskLevel is "safe"
 - originalText must be the exact clause text copied from the contract
 - plainEnglish must be in very simple language a non-lawyer can understand and in easy word
-- missingClauses must be null if there are no missing clauses if any missing clauses are there explain it littlebit but also not in one word like "title-explanation"
+- missingClauses must be null if none; otherwise return a list in format "Title - short explanation" (not just one word)
 - Return absolutely nothing except the JSON object
 
 Contract text:

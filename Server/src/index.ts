@@ -27,10 +27,17 @@ app.use("/addApi", addprojectRouter)
 
 // ✅ Move everything inside an async function
 const start = async () => {
-  await connectCloudinary();
-  app.listen(port, () => {
-    console.log(`🚀 Example app listening on port ${port}`)
-  });
-}
+  try {
+    await connectCloudinary();
+
+    app.listen(port, () => {
+      console.log(`🚀 Example app listening on port ${port}`);
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to start server:", err);
+    process.exit(1); // force crash so you SEE the error
+  }
+};
 
 start();

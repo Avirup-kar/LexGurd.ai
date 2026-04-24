@@ -5,7 +5,7 @@ const AI = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-export const createEmail = async (contractData: any) => {
+export const createRowEmail = async (contractData: any) => {
   try {
     const prompt = `
 You are a legal assistant AI.
@@ -19,6 +19,13 @@ STRICT RULES:
 - Keep tone professional, calm, and assertive
 - Do NOT use placeholders like [Name]
 
+FORMATTING RULES (VERY IMPORTANT):
+- You MUST use line breaks using \\n
+- Add TWO line breaks (\\n\\n) between each section
+- Each "Clause", "Concern", and "Request" must be on separate lines
+- Do NOT return everything in one paragraph
+- If formatting is not followed, the response is INVALID
+
 CONTRACT DATA:
 ${JSON.stringify(contractData, null, 2)}
 
@@ -28,8 +35,8 @@ INSTRUCTIONS:
 - Prioritize "danger" clauses first
 
 EMAIL BODY FORMAT:
-- Start with a short professional opening
-- For EACH risky clause, follow EXACT structure:
+
+Start with a short professional opening
 
 Clause:
 "<originalText>"
@@ -40,7 +47,11 @@ Explain the specific problem I might face.
 Request:
 State the safety change I want.
 
-- End with a short professional closing
+(Add TWO line breaks before the next clause)
+
+Repeat for each clause
+
+End with a short professional closing
 
 OUTPUT FORMAT:
 {
