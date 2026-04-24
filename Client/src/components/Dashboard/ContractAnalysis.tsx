@@ -228,13 +228,13 @@ export default function ContractAnalysis({ contract, loading }) {
   </h2>
 
   <div className="space-y-4">
-    <div className="flex items-start justify-between">
-  <div>
-    <p className="text-gray-400 text-sm">Subject</p>
-    <p className="text-white font-medium">
-      {emailData.subject}
-    </p>
-  </div>
+    <p className="text-gray-400 text-sm -mb-2">Subject</p>
+    <div className="flex items-start justify-between relative bg-[#0b1220] border border-white/10 rounded-lg p-3 md:p-4 text-gray-300 text-sm md:text-base whitespace-pre-line">
+    <div>
+      <p className="text-white font-medium">
+       {emailData.subject}
+      </p>
+    </div>
 
   {/* Copy Button */}
   <button
@@ -250,7 +250,7 @@ export default function ContractAnalysis({ contract, loading }) {
 </div>
 
     <div>
-      <p className="text-gray-400 text-sm">Body</p>
+      <p className="text-gray-400 text-sm mb-2">Body</p>
 
       <div className="relative bg-[#0b1220] border border-white/10 rounded-lg p-3 md:p-4 text-gray-300 text-sm md:text-base whitespace-pre-line">
 
