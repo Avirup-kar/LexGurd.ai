@@ -35,18 +35,18 @@ function ProjectPreview() {
   });
 
   // poll every 10 seconds
-  const interval = setInterval(async () => {
-    const data = await getProject();
+  // const interval = setInterval(async () => {
+  //   const data = await getProject();
 
-    // stop only when contractData is available
-    if (data?.contractData) {
-      setLoading(false);
-      clearInterval(interval);
-    }
-  }, 10000);
+  //   // stop only when contractData is available
+  //   if (data?.contractData) {
+  //     setLoading(false);
+  //     clearInterval(interval);
+  //   }
+  // }, 10000);
 
-  // cleanup on unmount
-  return () => clearInterval(interval);
+  // // cleanup on unmount
+  // return () => clearInterval(interval);
 }, []);
 
   return <>
