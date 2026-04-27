@@ -8,6 +8,8 @@ export default function ContractAnalysis({ contract, loading }) {
   const [emailLoading, setEmailLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedSubject, setCopiedSubject] = useState(false);
+  const [translations, setTranslations] = useState({});
+  const [language, setLanguage] = useState("en");
 
   const clauses = contract?.contractData?.clauses ?? [];
   const [selectedClause, setSelectedClause] = useState(clauses[0] ?? null);
@@ -24,6 +26,45 @@ export default function ContractAnalysis({ contract, loading }) {
     setEmailData(contract.email);
   }
 }, [contract?.email]);
+
+const handleTranslateClause = async (lang: string) => {
+  if (!selectedClause) return;
+
+  if (lang === "en") {
+    setLanguage("en");
+    return;
+  }
+
+  const key = `${selectedClause.id}_${lang}`;
+  console.log("KEY:", key, "CACHED:", translations[key]); // 👈 add this
+
+  if (translations[key]) {
+    setLanguage(lang);
+    return;
+  }
+
+  setLanguage(lang); // language switches but translations[key] is still undefined here
+
+  try {
+    const res = await Api.post("/api/translate-clause", {
+      clause: selectedClause,
+      lang,
+    });
+
+    console.log("RESPONSE:", res.data); // 👈 add this
+
+    if (res.data?.success === false) return;
+
+    setTranslations(prev => ({
+      ...prev,
+      [key]: res.data,
+    }));
+
+  } catch (err) {
+    console.error(`Translation failed for ${lang}:`, err);
+    setLanguage("en");
+  }
+};
 
     const handleGenerateEmail = async () => {
     try {
@@ -42,6 +83,47 @@ export default function ContractAnalysis({ contract, loading }) {
          setEmailLoading(false);
        }
     };
+
+// useEffect(() => {
+//   if (!selectedClause) return;
+
+//   const fetchTranslations = async () => {
+//     await Promise.all(
+//       ["hi", "bn"].map(async (lang) => {
+//         const key = `${selectedClause.id}_${lang}`;
+
+//         if (translations[key]) return; // already cached
+
+//         try {
+//           const res = await Api.post("/api/translate-clause", {
+//             clause: selectedClause,
+//             lang,
+//           });
+
+//           if (res.data?.success === false) {
+//             console.error("Auth error:", res.data.message);
+//             return;
+//           }
+
+//           setTranslations(prev => ({
+//             ...prev,
+//             [key]: res.data,
+//           }));
+//         } catch (err) {
+//           console.error(`Translation failed for ${lang}:`, err);
+//         }
+//       })
+//     );
+//   };
+
+//   fetchTranslations();
+// }, [selectedClause]);
+
+const key = `${selectedClause?.id}_${language}`;
+const displayClause =
+  language === "en"
+    ? selectedClause
+    : translations[key];
 
   // ✅ LOADING STATE
   if (loading) {
@@ -157,32 +239,96 @@ export default function ContractAnalysis({ contract, loading }) {
 
           {/* RIGHT PANEL */}
           <div className="bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6">
-            <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Clause Detail</h2>
-            {selectedClause && (
-              <>
-                <h3 className="text-lg md:text-xl font-semibold mb-2">
-                  <span className="font-semibold">Title:</span> {selectedClause.title}
-                </h3>
-                <p className="text-blue-400 text-sm md:text-base mb-4">
-                  <span className="font-semibold text-lg text-gray-200">Original clause from contract:-</span> {selectedClause.originalText}
-                </p>
-                <p className="text-gray-400 text-sm md:text-base mb-4">
-                  {selectedClause.plainEnglish && <span className="font-semibold text-white">Summary:-</span>} {selectedClause.plainEnglish}
-                </p>
-                {selectedClause.consequence && (
-                  <p className={` ${selectedClause.riskLevel === "danger" ? "text-red-400" : selectedClause.riskLevel === "medium" ? "text-yellow-400" : "text-green-400"} text-sm md:text-base mb-6`}>
-                    <span className="font-semibold text-xl">Consequence:-</span> {selectedClause.consequence}
-                  </p>
-                )}
-                {selectedClause.solution && (
-                  <div className="bg-[#0b1220] border border-blue-500/30 rounded-xl p-4 md:p-5">
-                    <p className="text-blue-400 text-sm font-semibold mb-2">Suggested Fix</p>
-                    <p className="text-gray-300 text-sm md:text-base">{selectedClause.solution}</p>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+  <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+    Clause Detail
+  </h2>
+
+  {/* 🔥 Language Buttons */}
+  <div className="flex gap-2 mb-3">
+  <button
+    onClick={() => handleTranslateClause("en")}
+    className={`px-3 py-1 text-xs rounded transition-all duration-200
+      ${language === "en" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
+    `}
+  >
+    EN
+  </button>
+
+  <button
+    onClick={() => handleTranslateClause("hi")}
+    className={`px-3 py-1 text-xs rounded transition-all duration-200
+      ${language === "hi" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
+    `}
+  >
+    Hindi
+  </button>
+
+  <button
+    onClick={() => handleTranslateClause("bn")}
+    className={`px-3 py-1 text-xs rounded transition-all duration-200
+      ${language === "bn" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
+    `}
+  >
+    Bengali
+  </button>
+</div>
+
+  {selectedClause && (
+    <>
+      {/* 🔥 SHOW LOADING INSIDE BOX */}
+      {language !== "en" && !translations[`${selectedClause.id}_${language}`] ? (
+        <p className="text-sm text-gray-400">⚡ Translating...</p>
+      ) : (
+        <>
+          {/* ✅ USE displayClause */}
+          <h3 className="text-lg md:text-xl font-semibold mb-2">
+            <span className="font-semibold">Title:</span> {displayClause.title}
+          </h3>
+
+          <p className="text-blue-400 text-sm md:text-base mb-4">
+            <span className="font-semibold text-lg text-gray-200">
+              Original clause from contract:-
+            </span>{" "}
+            {displayClause.originalText}
+          </p>
+
+          <p className="text-gray-400 text-sm md:text-base mb-4">
+            {displayClause.plainEnglish && (
+              <span className="font-semibold text-white">Summary:-</span>
+            )}{" "}
+            {displayClause.plainEnglish}
+          </p>
+
+          {displayClause.consequence && (
+            <p
+              className={` ${
+                selectedClause.riskLevel === "danger"
+                  ? "text-red-400"
+                  : selectedClause.riskLevel === "medium"
+                  ? "text-yellow-400"
+                  : "text-green-400"
+              } text-sm md:text-base mb-6`}
+            >
+              <span className="font-semibold text-xl">Consequence:-</span>{" "}
+              {displayClause.consequence}
+            </p>
+          )}
+
+          {displayClause.solution && (
+            <div className="bg-[#0b1220] border border-blue-500/30 rounded-xl p-4 md:p-5">
+              <p className="text-blue-400 text-sm font-semibold mb-2">
+                Suggested Fix
+              </p>
+              <p className="text-gray-300 text-sm md:text-base">
+                {displayClause.solution}
+              </p>
+            </div>
+          )}
+        </>
+      )}
+    </>
+  )}
+</div>
 
         </div>
 
