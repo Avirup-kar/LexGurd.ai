@@ -50,8 +50,6 @@ export default function ContractAnalysis({ contract, loading }) {
         lang,
       });
 
-      console.log("RESPONSE:", res.data); // 👈 add this
-
       if (res.data?.success === false) return;
 
       setTranslations((prev) => ({
@@ -243,13 +241,8 @@ export default function ContractAnalysis({ contract, loading }) {
             {clauses.map((clause) => (
               <div
                 key={clause.id}
-                onClick={() => {
-                  if (selectedClause?.id !== clause.id) {
-                    setSelectedClause(clause);
-                    setLanguage("en");
-                  }
-                }}
-                className="flex justify-between items-center py-3 md:py-4 border-b border-white/15 cursor-pointer hover:bg-[#0b1220] px-2 rounded-lg"
+                onClick={() => setSelectedClause(clause)}
+                className={`flex justify-between items-center py-3 md:py-4 border-b border-white/15 cursor-pointer px-2 rounded-lg transition-all ${selectedClause?.id === clause.id ? "bg-gray-800" : "hover:bg-[#0b1220]"}`}
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -285,17 +278,28 @@ export default function ContractAnalysis({ contract, loading }) {
             </h2>
 
             {/* 🔥 Language Buttons */}
-            {selectedClause && (<div className="flex gap-2 mb-3">
-              <button onClick={() => handleTranslateClause("en")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "en" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
-                EN
-              </button>
-              <button onClick={() => handleTranslateClause("hi")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "hi" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
-                Hindi
-              </button>
-              <button onClick={() => handleTranslateClause("bn")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "bn" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
-                Bengali
-              </button>
-            </div>)}
+            {selectedClause && (
+              <div className="flex gap-2 mb-3">
+                <button
+                  onClick={() => handleTranslateClause("en")}
+                  className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "en" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => handleTranslateClause("hi")}
+                  className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "hi" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}
+                >
+                  Hindi
+                </button>
+                <button
+                  onClick={() => handleTranslateClause("bn")}
+                  className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "bn" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}
+                >
+                  Bengali
+                </button>
+              </div>
+            )}
 
             {selectedClause && (
               <>
