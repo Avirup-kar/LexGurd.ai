@@ -285,34 +285,17 @@ export default function ContractAnalysis({ contract, loading }) {
             </h2>
 
             {/* 🔥 Language Buttons */}
-            <div className="flex gap-2 mb-3">
-              <button
-                onClick={() => handleTranslateClause("en")}
-                className={`px-3 py-1 text-xs rounded transition-all duration-200
-      ${language === "en" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
-    `}
-              >
+            {selectedClause && (<div className="flex gap-2 mb-3">
+              <button onClick={() => handleTranslateClause("en")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "en" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
                 EN
               </button>
-
-              <button
-                onClick={() => handleTranslateClause("hi")}
-                className={`px-3 py-1 text-xs rounded transition-all duration-200
-      ${language === "hi" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
-    `}
-              >
+              <button onClick={() => handleTranslateClause("hi")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "hi" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
                 Hindi
               </button>
-
-              <button
-                onClick={() => handleTranslateClause("bn")}
-                className={`px-3 py-1 text-xs rounded transition-all duration-200
-      ${language === "bn" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}
-    `}
-              >
+              <button onClick={() => handleTranslateClause("bn")} className={`px-3 py-1 text-xs rounded transition-all duration-200 ${language === "bn" ? "bg-blue-600 text-white scale-105" : "bg-white/10 hover:bg-white/20 active:scale-95"}`}>
                 Bengali
               </button>
-            </div>
+            </div>)}
 
             {selectedClause && (
               <>

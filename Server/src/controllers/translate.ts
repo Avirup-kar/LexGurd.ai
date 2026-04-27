@@ -69,10 +69,8 @@ const Translate = async (req: Request, res: Response) => {
       consequence,
       solution,
     };
-    // console.log(translatedClause)
 
     res.json(translatedClause);
-
   } catch (err) {
     console.error("Translation error:", err);
     res.status(500).json({ error: "Translation failed" });
