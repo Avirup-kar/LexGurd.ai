@@ -40,6 +40,6 @@ export async function searchExpertsController(req: Request, res: Response) {
     });
   } catch (err: any) {
     console.error("searchExperts controller error:", err);
-    return res.json({ err, experts: [] });
+    return res.json({ success: false, message: err.message || "Internal server error" });
   }
 }
