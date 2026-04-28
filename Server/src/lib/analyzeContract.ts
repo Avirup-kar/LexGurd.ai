@@ -23,7 +23,7 @@ interface ContractAnalysis {
   missingClauses: string[] | null;
 }
 
-const parseGeminiResponse = (rawText: string): ContractAnalysis => {
+const parseGroqResponse = (rawText: string): ContractAnalysis => {
   try {
     const cleaned = rawText
       .replace(/```json/g, "")
@@ -77,8 +77,6 @@ Contract text:
 ${contractText}
     `;
 
-    console.log("🔥 Gemini API HIT");
-
     const response = await AI.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
@@ -92,7 +90,7 @@ ${contractText}
     });
 
     const content = response.choices[0]?.message.content!;
-    return parseGeminiResponse(content);
+    return parseGroqResponse(content);
 
   } catch (error: any) {
     console.log(error.status)   // what status code?

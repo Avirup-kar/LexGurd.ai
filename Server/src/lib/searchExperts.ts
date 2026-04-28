@@ -1,5 +1,13 @@
+import OpenAI from "openai";
+
+const AI = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY!,
+  baseURL: "https://api.groq.com/openai/v1",
+});
+
 export async function searchExperts(contractData: any) {
   try {
+
     const dangerClauses = contractData.clauses
       .filter((c: any) => c.riskLevel === "danger")
       .map((c: any) => c.title)
@@ -17,19 +25,7 @@ export async function searchExperts(contractData: any) {
 
     const rawItems = googleData.items.slice(0, 5);
 
-    const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY!,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{
-          role: "user",
-          content: `Extract contact details from these search results.
+     const prompt = `Extract contact details from these search results.
 STRICT RULES:
 - ONLY use data that actually exists in the snippet
 - If phone not found → null
@@ -38,7 +34,15 @@ STRICT RULES:
 - website is always the URL provided
 
 Return ONLY a JSON array:
-[{ "name": "...", "website": "...", "phone": "..or null", "email": "..or null", "description": "..." }]
+[
+  {
+    "name": "lawyer or firm name",
+    "website": "full url",
+    "phone": "phone number or null",
+    "email": "email or null",
+    "description": "one line about them"
+  }
+]
 
 Search Results:
 ${rawItems.map((item: any, i: number) => `
@@ -47,13 +51,23 @@ ${rawItems.map((item: any, i: number) => `
   Snippet: ${item.snippet}
 `).join("\n")}
 
-Return ONLY valid JSON, no extra text.`,
-        }],
-      }),
+Return ONLY valid JSON, no extra text.`;
+
+    const aiRes = await AI.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.2,
+       max_tokens: 8000,
     });
 
-    const aiData = await aiRes.json();
-    const text = aiData.content[0].text.trim();
+    // ✅ Correct - OpenAI/Anthropic SDK style
+    const text = aiRes?.choices[0]?.message.content?.trim() ?? "";
+
     const clean = text.replace(/```json|```/g, "").trim();
 
     return JSON.parse(clean);
