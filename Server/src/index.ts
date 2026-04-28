@@ -6,6 +6,7 @@ import getProjectRouter from "./routes/getProject.js";
 import addprojectRouter from "./routes/addProject.js";
 import connectCloudinary from './configs/cloudinary.js';
 import getTranslatedtext from './routes/translate.js';
+import getExpert from './routes/searchExperts.js';
 
 const app = express()
 const port = 3000
@@ -26,6 +27,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/getApi", getProjectRouter);
 app.use("/addApi", addprojectRouter);
 app.use('/api', getTranslatedtext);
+app.use("/api", getExpert);
 
 // ✅ Move everything inside an async function
 const start = async () => {
