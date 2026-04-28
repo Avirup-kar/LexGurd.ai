@@ -20,11 +20,26 @@ export async function searchExpertsController(req: Request, res: Response) {
         select: {
           contractData: true, 
         }
-      })
+    });
 
     const experts = await searchExperts(contractData);
-  } catch (err) {
+
+    const addEmail = await prisma.project.update({
+          where: {
+            id: projectId as string,
+            userId: userId as string
+          },
+          data: {
+            expertData: experts,
+          },
+    });
+
+    return res.json({
+      success: true,
+      email: addEmail.email,
+    });
+  } catch (err: any) {
     console.error("searchExperts controller error:", err);
-    return Response.json({ experts: [] });
+    return res.json({ err, experts: [] });
   }
 }
