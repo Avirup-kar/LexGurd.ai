@@ -59,7 +59,8 @@ export async function getProject(req: Request, res: Response) {
           id: true,
           imageUrl: true,
           contractData: true,
-          email: true
+          email: true,
+          expertData: true
         }
       })
 

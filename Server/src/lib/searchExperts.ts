@@ -13,8 +13,8 @@ export async function searchExperts(contractData: any) {
       .slice(0, 2)
       .join(" ");
 
-    const query = `${contractData.contractTitle} lawyer ${dangerClauses} India contact`;
-
+    const query = `best lawyer for ${contractData.contractTitle} ${dangerClauses} India contact details`;
+    
     const googleRes = await fetch(
       `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.GOOGLE_CX_ID}&q=${encodeURIComponent(query)}&num=5`
     );
