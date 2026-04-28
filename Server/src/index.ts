@@ -2,11 +2,13 @@ import 'dotenv/config';
 import express, { type Request, type Response } from "express"
 import { clerkMiddleware } from '@clerk/express';
 import cors from 'cors'
-import getProjectRouter from "./routes/getProject.js";
-import addprojectRouter from "./routes/addProject.js";
 import connectCloudinary from './configs/cloudinary.js';
-import getTranslatedtext from './routes/translate.js';
-import getExpert from './routes/searchExperts.js';
+
+//Routes
+import getProjectRouter from "./routes/getProjectRoute.js";
+import addprojectRouter from "./routes/addProjectRoute.js";
+import getTranslatedtext from './routes/translateRoute.js';
+import getExpert from './routes/searchExpertsRoute.js';
 
 const app = express()
 const port = 3000
