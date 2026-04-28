@@ -62,7 +62,7 @@ Return ONLY valid JSON, no extra text.`;
         },
       ],
       temperature: 0.2,
-       max_tokens: 8000,
+       max_tokens: 1000,
     });
 
     // ✅ Correct - OpenAI/Anthropic SDK style
