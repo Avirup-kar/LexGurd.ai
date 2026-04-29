@@ -29,9 +29,9 @@ export default function ContractAnalysis({ contract, loading }) {
       setEmailData(contract.email);
     }
 
-    if(experData.length > 0) {
-      setExperts(experData);
-    }
+    // if(experData.length > 0) {
+    //   setExperts(experData);
+    // }
   }, [contract?.email, experData]);
 
   const handleTranslateClause = async (lang: string) => {
@@ -131,13 +131,18 @@ export default function ContractAnalysis({ contract, loading }) {
         alert("Contract ID is missing. Cannot generate email.");
         return;
       }
+      setSelectedClause(null);
+      setShowExperts(true);
       setExpertLoading(true);
 
-      const { data } = await Api.post("/api/search-experts", {
-        projectId: contract?.id,
-      });
+      // const { data } = await Api.post("/api/search-experts", {
+      //   projectId: contract?.id,
+      // });
 
-      setExperts(data.expertData);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setExperts(experData);
+
+      // setExperts(data.expertData);
     } catch (err) {
       console.error("Expert generation failed", err);
     } finally {
@@ -335,42 +340,53 @@ export default function ContractAnalysis({ contract, loading }) {
             )}
             
            {/* EXPERT SUGGESTIONS */}
-            {showExperts && (
+            {expertLoading ? (
+              <div className="flex items-center gap-3 mt-3">
+                <div className="w-5 h-5 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                <p className="text-gray-400 text-sm">Searching experts...</p>
+              </div>
+            ) : (
+              showExperts && (
                 <div>
-                  {experts.map((expert) => (
-                    <div key={expert.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4 mt-3">
-                      
-                      <div className="flex justify-between items-start">
-                        <p className="text-white font-bold text-sm md:text-base">{expert?.name}</p>
-                        {expert?.website && (
-                          <a href={expert?.website} target="_blank" className="text-blue-400 text-xs font-semibold">
-                            🔗 VISIT
-                          </a>
-                        )}
+                  {experts.length === 0 ? (
+                    <p className="text-gray-500 text-sm mt-3">No experts found.</p>
+                  ) : (
+                    experts.map((expert) => (
+                      <div key={expert.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4 mt-3">
+                        
+                        <div className="flex justify-between items-start">
+                          <p className="text-white font-bold text-sm md:text-base">{expert?.name}</p>
+                          {expert?.website && (
+                            <a href={expert?.website} target="_blank" className="text-blue-400 text-xs font-semibold">
+                              🔗 VISIT
+                            </a>
+                          )}
+                        </div>
+
+                        <p className="text-gray-300 text-xs md:text-sm mt-1">{expert?.description}</p>
+
+                        <div className="flex gap-4 mt-2">
+                          {expert?.phone && (
+                            <a href={`tel:${expert.phone}`} className="text-green-400 text-xs">
+                              📞 {expert.phone}
+                            </a>
+                          )}
+                          {expert?.email && (
+                            <a href={`mailto:${expert.email}`} className="text-blue-400 text-xs">
+                              ✉️ {expert.email}
+                            </a>
+                          )}
+                          {!expert?.phone && !expert?.email && (
+                            <p className="text-gray-500 text-xs">No direct contact — visit website</p>
+                          )}
+                        </div>
+
                       </div>
-
-                      <p className="text-gray-300 text-xs md:text-sm mt-1">{expert?.description}</p>
-
-                      <div className="flex gap-4 mt-2">
-                        {expert?.phone && (
-                          <a href={`tel:${expert.phone}`} className="text-green-400 text-xs">
-                            📞 {expert.phone}
-                          </a>
-                        )}
-                        {expert?.email && (
-                          <a href={`mailto:${expert.email}`} className="text-blue-400 text-xs">
-                            ✉️ {expert.email}
-                          </a>
-                        )}
-                        {!expert?.phone && !expert?.email && (
-                          <p className="text-gray-500 text-xs">No direct contact — visit website</p>
-                        )}
-                      </div>
-
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
-              )}
+              )
+            )}
 
             {/* 🔥 Language Buttons */}
             {selectedClause && (
