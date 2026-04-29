@@ -243,7 +243,7 @@ export default function ContractAnalysis({ contract, loading }) {
               <div
                 key={clause.id}
                 onClick={() => setSelectedClause(clause)}
-                className={`flex justify-between items-center py-3 md:py-4 border-b border-white/15 cursor-pointer px-2 rounded-lg transition-all ${selectedClause?.id === clause.id ? "bg-gray-800" : "hover:bg-[#0b1220]"}`}
+                className={`flex justify-between items-center py-3 md:py-4 border-b border-white/15 cursor-pointer px-2 rounded-lg transition-all mt-3 ${selectedClause?.id === clause.id ? "bg-gray-800" : "hover:bg-[#0b1220]"}`}
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -272,11 +272,17 @@ export default function ContractAnalysis({ contract, loading }) {
             ))}
 
             {overallRisk !== "SAFE" && (
-              <div className="flex items-start gap-3 bg-[#0b1220] border border-yellow-500/20 rounded-lg p-3 md:p-4 mt-5">
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mt-2" />
-                <p className="text-gray-300 text-sm md:text-base">
-                  Get solution from experts for medium and high risk clauses.
-                </p>
+              <div className="flex items-start gap-3 bg-[#0d1b38ae] border border-yellow-500/20 cursor-pointer rounded-lg p-3 md:p-4 mt-10">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-2" />
+                {experts.length === 0 ? (
+                  <p className="text-gray-300 text-sm md:text-base">
+                    Get solution from experts for medium and high risk clauses.
+                  </p>
+                ) : (
+                  <p className="text-gray-300 text-sm md:text-base">
+                    See expert suggestions!
+                  </p>
+                )}
               </div>
             )}
           </div>
