@@ -1,4 +1,5 @@
 import { useApi } from "@/config/axios";
+import { experData } from "@/data/contractData";
 import { useEffect, useState } from "react";
 
 export default function ContractAnalysis({ contract, loading }) {
@@ -26,7 +27,11 @@ export default function ContractAnalysis({ contract, loading }) {
     if (contract?.email && !emailData) {
       setEmailData(contract.email);
     }
-  }, [contract?.email]);
+
+    if(experData.length > 0) {
+      setExperts(experData);
+    }
+  }, [contract?.email, experData]);
 
   const handleTranslateClause = async (lang: string) => {
     if (!selectedClause) return;
@@ -120,7 +125,7 @@ export default function ContractAnalysis({ contract, loading }) {
   // }, [selectedClause]);
 
   const getExperts = async () => {
-    
+
   }
 
   const key = `${selectedClause?.id}_${language}`;
@@ -276,6 +281,7 @@ export default function ContractAnalysis({ contract, loading }) {
               </div>
             ))}
 
+           //show expert button only if not safe
             {overallRisk !== "SAFE" && (
               <div 
               onClick={async () => {
