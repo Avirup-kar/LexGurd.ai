@@ -281,7 +281,7 @@ export default function ContractAnalysis({ contract, loading }) {
               </div>
             ))}
 
-           //show expert button only if not safe
+           {/* //show expert button only if not safe */}
             {overallRisk !== "SAFE" && (
               <div 
               onClick={async () => {
@@ -316,6 +316,44 @@ export default function ContractAnalysis({ contract, loading }) {
                 Expert Suggestions
               </h2>
             )}
+            
+           {/* EXPERT SUGGESTIONS */}
+            {showExperts && (
+                <div>
+                  {experts.map((expert) => (
+                    <div key={expert.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4 mt-3">
+                      
+                      <div className="flex justify-between items-start">
+                        <p className="text-white font-bold text-sm md:text-base">{expert?.name}</p>
+                        {expert?.website && (
+                          <a href={expert?.website} target="_blank" className="text-blue-400 text-xs font-semibold">
+                            🔗 VISIT
+                          </a>
+                        )}
+                      </div>
+
+                      <p className="text-gray-300 text-xs md:text-sm mt-1">{expert?.description}</p>
+
+                      <div className="flex gap-4 mt-2">
+                        {expert?.phone && (
+                          <a href={`tel:${expert.phone}`} className="text-green-400 text-xs">
+                            📞 {expert.phone}
+                          </a>
+                        )}
+                        {expert?.email && (
+                          <a href={`mailto:${expert.email}`} className="text-blue-400 text-xs">
+                            ✉️ {expert.email}
+                          </a>
+                        )}
+                        {!expert?.phone && !expert?.email && (
+                          <p className="text-gray-500 text-xs">No direct contact — visit website</p>
+                        )}
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+              )}
 
             {/* 🔥 Language Buttons */}
             {selectedClause && (
