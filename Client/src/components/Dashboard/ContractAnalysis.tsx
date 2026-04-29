@@ -252,7 +252,7 @@ export default function ContractAnalysis({ contract, loading }) {
             {clauses.map((clause) => (
               <div
                 key={clause.id}
-                onClick={() => setSelectedClause(clause)}
+                onClick={() => {setSelectedClause(clause); setShowExperts(false); setLanguage("en");}}
                 className={`flex justify-between items-center py-3 md:py-4 border-b border-white/15 cursor-pointer px-2 rounded-lg transition-all mt-3 ${selectedClause?.id === clause.id ? "bg-gray-800" : "hover:bg-[#0b1220]"}`}
               >
                 <div className="flex items-center gap-3">
@@ -309,9 +309,13 @@ export default function ContractAnalysis({ contract, loading }) {
 
           {/* RIGHT PANEL */}
           <div className="bg-[#020817] border border-white/10 rounded-xl p-4 md:p-6">
-            <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+           {!showExperts ? (<h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
               Clause Detail
-            </h2>
+            </h2>) : (
+              <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4">
+                Expert Suggestions
+              </h2>
+            )}
 
             {/* 🔥 Language Buttons */}
             {selectedClause && (
