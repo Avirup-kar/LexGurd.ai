@@ -8,6 +8,7 @@ export default function ContractAnalysis({ contract, loading }) {
   const [emailLoading, setEmailLoading] = useState(false);
   const [experts, setExperts] = useState([]);
   const [showExperts, setShowExperts] = useState(false);
+  const [expertLoading, setExpertLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedSubject, setCopiedSubject] = useState(false);
   const [translations, setTranslations] = useState({});
@@ -125,7 +126,23 @@ export default function ContractAnalysis({ contract, loading }) {
   // }, [selectedClause]);
 
   const getExperts = async () => {
+     try {
+      if (!contract?.id) {
+        alert("Contract ID is missing. Cannot generate email.");
+        return;
+      }
+      setExpertLoading(true);
 
+      const { data } = await Api.post("/api/search-experts", {
+        projectId: contract?.id,
+      });
+
+      setExperts(data.expertData);
+    } catch (err) {
+      console.error("Expert generation failed", err);
+    } finally {
+      setExpertLoading(false);
+    }
   }
 
   const key = `${selectedClause?.id}_${language}`;
