@@ -5,6 +5,7 @@ export default function ContractAnalysis({ contract, loading }) {
   const Api = useApi();
   const [emailData, setEmailData] = useState(null);
   const [emailLoading, setEmailLoading] = useState(false);
+  const [experts, setExperts] = useState([]);
   const [copied, setCopied] = useState(false);
   const [copiedSubject, setCopiedSubject] = useState(false);
   const [translations, setTranslations] = useState({});
@@ -269,6 +270,15 @@ export default function ContractAnalysis({ contract, loading }) {
                 </span>
               </div>
             ))}
+
+            {overallRisk !== "SAFE" && (
+              <div className="flex items-start gap-3 bg-[#0b1220] border border-yellow-500/20 rounded-lg p-3 md:p-4 mt-5">
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mt-2" />
+                <p className="text-gray-300 text-sm md:text-base">
+                  Get solution from experts for medium and high risk clauses.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* RIGHT PANEL */}
