@@ -119,6 +119,10 @@ export default function ContractAnalysis({ contract, loading }) {
   //   fetchTranslations();
   // }, [selectedClause]);
 
+  const getExperts = async () => {
+    
+  }
+
   const key = `${selectedClause?.id}_${language}`;
   const displayClause = language === "en" ? selectedClause : translations[key];
 
@@ -273,9 +277,18 @@ export default function ContractAnalysis({ contract, loading }) {
             ))}
 
             {overallRisk !== "SAFE" && (
-              <div className="flex items-start gap-3 bg-[#0d1b38ae] border border-yellow-500/20 cursor-pointer rounded-lg p-3 md:p-4 mt-10">
+              <div 
+              onClick={async () => {
+               if (experts.length === 0) {
+                 await getExperts();
+               } else {
+                 setShowExperts(true);
+                 setSelectedClause(null);
+               }
+              }}
+              className="flex items-start gap-3 bg-[#0d1b38ae] border border-yellow-500/20 cursor-pointer rounded-lg p-3 md:p-4 mt-10">
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-2" />
-                {!showExperts ? (
+                {experts.length === 0 ? (
                   <p className="text-gray-300 text-sm md:text-base">
                     Get solution from experts for medium and high risk clauses.
                   </p>
