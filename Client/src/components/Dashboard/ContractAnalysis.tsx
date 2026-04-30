@@ -126,29 +126,35 @@ export default function ContractAnalysis({ contract, loading }) {
   // }, [selectedClause]);
 
   const getExperts = async () => {
-     try {
-      if (!contract?.id) {
-        alert("Contract ID is missing. Cannot generate email.");
-        return;
-      }
-      setSelectedClause(null);
-      setShowExperts(true);
-      setExpertLoading(true);
-
-      // const { data } = await Api.post("/api/search-experts", {
-      //   projectId: contract?.id,
-      // });
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setExperts(experData);
-
-      // setExperts(data.expertData);
-    } catch (err) {
-      console.error("Expert generation failed", err);
-    } finally {
-      setExpertLoading(false);
+  try {
+    if (!contract?.id) {
+      alert("Contract ID is missing. Cannot generate email.");
+      return;
     }
+    setSelectedClause(null);
+    setShowExperts(true);
+    setExpertLoading(true);
+
+    const { data } = await Api.post("/api/search-experts", {
+      projectId: contract?.id,
+    });
+
+    if (!data || !data.experData) {
+      alert("No experts found. Please try again.");
+      setShowExperts(false);
+      return;
+    }
+
+    setExperts(data.experData);
+
+  } catch (err: any) {
+    console.error("Expert generation failed", err);
+    alert(err?.response?.data?.message || "Something went wrong. Please try again.");
+    setShowExperts(false);
+  } finally {
+    setExpertLoading(false);
   }
+};
 
   const key = `${selectedClause?.id}_${language}`;
   const displayClause = language === "en" ? selectedClause : translations[key];
@@ -307,7 +313,7 @@ export default function ContractAnalysis({ contract, loading }) {
             {overallRisk !== "SAFE" && (
               <div 
               onClick={async () => {
-               if (experts.length === 0) {
+               if (experts?.length === 0) {
                  await getExperts();
                } else {
                  setShowExperts(true);
@@ -316,7 +322,7 @@ export default function ContractAnalysis({ contract, loading }) {
               }}
               className="flex items-start gap-3 bg-[#0d1b38ae] border border-yellow-500/20 cursor-pointer rounded-lg p-3 md:p-4 mt-10">
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-2" />
-                {experts.length === 0 ? (
+                {experts?.length === 0 ? (
                   <p className="text-gray-300 text-sm md:text-base">
                     Get solution from experts for medium and high risk clauses.
                   </p>
@@ -348,10 +354,10 @@ export default function ContractAnalysis({ contract, loading }) {
             ) : (
               showExperts && (
                 <div>
-                  {experts.length === 0 ? (
+                  {experts?.length === 0 ? (
                     <p className="text-gray-500 text-sm mt-3">No experts found.</p>
                   ) : (
-                    experts.map((expert) => (
+                    experts?.map((expert) => (
                       <div key={expert.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4 mt-3">
                         
                         <div className="flex justify-between items-start">

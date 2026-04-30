@@ -7,6 +7,7 @@ const AI = new OpenAI({
 
 export async function searchExperts(contractData: any) {
   try {
+
     const dangerClauses = contractData.clauses
       .filter((c: any) => c.riskLevel === "danger")
       .map((c: any) => c.title)
@@ -20,9 +21,19 @@ export async function searchExperts(contractData: any) {
     );
     const googleData = await googleRes.json();
 
+    console.log("🔍 Google API Response:", googleData); // 👈 add this
+    console.log("🔍 Google API Error:", googleData.error); // 👈 add this
+
     if (!googleData.items || googleData.items.length === 0) return [];
 
     const rawItems = googleData.items.slice(0, 5);
+
+    console.log("🔍 Google Search Results:", rawItems);
+
+    if(!rawItems || rawItems.length === 0) {
+      console.log("⚠️ No search results found for query:", query);
+      return [];
+     }
 
     const prompt = `
 You are a data extraction API.
