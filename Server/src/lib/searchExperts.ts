@@ -15,25 +15,17 @@ export async function searchExperts(contractData: any) {
       .join(" ");
 
     const query = `best lawyer for ${contractData.contractTitle} ${dangerClauses} India contact details`;
-    
-    const googleRes = await fetch(
-      `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.GOOGLE_CX_ID}&q=${encodeURIComponent(query)}&num=5`
+
+    const serpRes = await fetch(
+      `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&location=India&api_key=${process.env.SERPAPI_KEY}`
     );
-    const googleData = await googleRes.json();
+    const serpData = await serpRes.json();
 
-    console.log("🔍 Google API Response:", googleData); // 👈 add this
-    console.log("🔍 Google API Error:", googleData.error); // 👈 add this
+    if (!serpData.organic_results || serpData.organic_results.length === 0) return [];
 
-    if (!googleData.items || googleData.items.length === 0) return [];
+    const rawItems = serpData.organic_results.slice(0, 5);
 
-    const rawItems = googleData.items.slice(0, 5);
-
-    console.log("🔍 Google Search Results:", rawItems);
-
-    if(!rawItems || rawItems.length === 0) {
-      console.log("⚠️ No search results found for query:", query);
-      return [];
-     }
+    console.log("🔍 Search Results:", rawItems);
 
     const prompt = `
 You are a data extraction API.
@@ -78,25 +70,26 @@ ${JSON.stringify(rawItems, null, 2)}
     });
 
     const text = aiRes?.choices[0]?.message.content?.trim() ?? "";
-const clean = text.replace(/```json|```/g, "").trim();
+    const clean = text.replace(/```json|```/g, "").trim();
 
-// ✅ SAFE PARSE
-let parsed = [];
-try {
-  parsed = JSON.parse(clean);
-} catch (e) {
-  console.error("❌ JSON parse failed:", e);
-  // 🔥 Fallback - use raw Google data
-  return rawItems.map((item: any) => ({
-    name: item.title,
-    website: item.link,
-    phone: null,
-    email: null,
-    description: item.snippet,
-  }));
-}
+    // ✅ SAFE PARSE
+    let parsed = [];
+    try {
+      parsed = JSON.parse(clean);
+    } catch (e) {
+      console.error("❌ JSON parse failed:", e);
+      // 🔥 Fallback - use raw SerpAPI data
+      return rawItems.map((item: any, index: number) => ({
+        id: index + 1,
+        name: item.title,
+        website: item.link,
+        phone: null,
+        email: null,
+        description: item.snippet,
+      }));
+    }
 
-return parsed;
+    return parsed;
 
   } catch (err) {
     console.error("searchExperts error:", err);

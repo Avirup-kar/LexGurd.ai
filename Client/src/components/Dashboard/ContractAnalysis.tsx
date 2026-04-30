@@ -29,10 +29,11 @@ export default function ContractAnalysis({ contract, loading }) {
       setEmailData(contract.email);
     }
 
-    // if(experData.length > 0) {
-    //   setExperts(experData);
-    // }
-  }, [contract?.email, experData]);
+    if(contract?.expertData?.length > 0) {
+      setExperts(contract.expertData);
+    }
+    console.log("Contract or expertData changed:", contract?.expertData);
+  }, [contract?.email, contract?.expertData]);
 
   const handleTranslateClause = async (lang: string) => {
     if (!selectedClause) return;
@@ -139,13 +140,13 @@ export default function ContractAnalysis({ contract, loading }) {
       projectId: contract?.id,
     });
 
-    if (!data || !data.experData) {
+    if (!data || !data.expertData) {
       alert("No experts found. Please try again.");
       setShowExperts(false);
       return;
     }
 
-    setExperts(data.experData);
+    setExperts(data.expertData);
 
   } catch (err: any) {
     console.error("Expert generation failed", err);
